@@ -1,0 +1,120 @@
+\documentclass[twocolumn]{article}
+
+\usepackage{graphicx}
+
+\usepackage{color}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage[affil-it]{authblk} % Affilation
+\usepackage{float}
+
+%%%%%%%%%%-----TODOS
+\setlength{\marginparwidth}{2cm}
+\usepackage[obeyFinal]{todonotes}
+
+%%%%%% OWN Pseudocode style
+
+\lstnewenvironment{algorithm}[1][]
+{   
+\renewcommand{\lstlistingname}{Algorithm}
+    \lstset{
+        mathescape=true,
+        frame=tB,
+        numbers=left, 
+        numberstyle=\tiny,
+        basicstyle=\scriptsize, 
+        keywordstyle=\color{black}\bfseries\em,
+        keywords={,input, output, return, datatype, function, if, else, foreach, while, begin, end, or, }
+        numbers=left,
+        xleftmargin=.04\textwidth,
+        #1
+    }
+}
+{}
+
+%%%%%% OWN Codesnippets
+\lstnewenvironment{codesnippet}[1][]
+{   
+\renewcommand{\lstlistingname}{Code Snippet}
+    \lstset{
+        mathescape=true,
+        frame=tB,
+        numbers=left, 
+        numberstyle=\tiny,
+        basicstyle=\scriptsize, 
+        keywordstyle=\color{black}\bfseries\em,
+        keywords={,input, output, return, datatype, function, if, else, foreach, while, begin, end, or, int, char, }
+        numbers=left,
+        xleftmargin=.04\textwidth,
+        #1
+    }
+}
+{}
+%%%%%% OWN Listings
+\lstnewenvironment{customlisting}[1][]
+{   
+\renewcommand{\lstlistingname}{Listing}
+    \lstset{
+        mathescape=true,
+        frame=tB,
+        numbers=left, 
+        numberstyle=\tiny,
+        basicstyle=\scriptsize, 
+        keywordstyle=\color{black}\bfseries\em,
+        keywords={,input, output, return, datatype, function, if, else, foreach, while, begin, end, or, }
+        numbers=left,
+        xleftmargin=.04\textwidth,
+        #1
+    }
+}
+{}
+
+
+\usepackage{tikz}
+\usepackage{adjustbox}
+\usepackage{amsmath}
+%%%%%%% Make it possible to write over a leftrightarrow
+
+\makeatletter
+\newcommand{\xleftrightarrow}[2][]{\ext@arrow 0099\Leftrightarrowfill@{#1}{#2}}
+\makeatother
+
+%%%%%% SPECIFY own MOD
+\newcommand{\Mod}[1]{\ (\mathrm{mod}\ #1)}
+
+%%%%%%%%%%-----REFERENCES
+\usepackage[hidelinks]{hyperref}	% Makes references clickable
+
+\graphicspath{{images/}}
+
+
+\usetikzlibrary{shapes}
+\usepackage{xspace}
+\newcommand{\A}{\ensuremath{\mathcal{A}}\xspace}
+\newcommand{\B}{\ensuremath{\mathcal{B}}\xspace}
+\newcommand\pa[1]{\ensuremath{\left(#1\right)}}
+
+%%%%%%%%%%-----Text Highlightning
+\usepackage{soul}
+\usepackage{xcolor}
+\newcommand{\highlight}[1]{\colorbox{lightgray}{$\displaystyle #1$}}
+
+\title{Dependent Types for Software Engineers}
+\author{Matthias Gabriel}
+\affil{University of Applied Sciences Rapperswil\\Supervisor Prof. Dr. Farhard D. Mehta\\Seminar FS2020}
+\date{\today}
+
+  
+\begin{document}
+\maketitle
+\input{abstract}
+\input{sections/introduction}
+\input{sections/contraint_solvers}
+\input{sections/symbolic_execution}
+\input{sections/concolic_testing}
+\input{sections/handwritten_vs_generated_tests}
+\input{sections/conclusion}
+\bibliographystyle{plain}
+\bibliography{seminarreferences}
+
+\end{document}
