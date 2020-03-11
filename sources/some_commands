@@ -1,0 +1,3 @@
+ctrl+c ctrl+n -> evaluate expression
+ctrl+c ctrl+d -> check type
+ctrl+c ctrl+l -> load a file
