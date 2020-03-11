@@ -1,0 +1,35 @@
+\section{First steps in Agda}\label{section:first_steps_in_agda}
+The idea of this chapter is to give the reader a brief overview how Agda and external proofs (especially in agda) work. This is helpful as a contrast to the following chapters. 
+In chapter \ref{section:internal_vs_external_verification} some differences are highlighted. The example therefore will most probably be based on the list to be able to compare it later with the vector type.
+
+In the following chapter a brief intoduction to agda is given. If you are experienced in any functional programming, it will be a short read or you might even skip some parts.
+
+Agda is a advanced functional programming language. Its syntax is strongly related to haskell but it differs conceptwise in some topics. 
+One thing to mention is that agda supports the full unicode characters in the source code with only a few reserved symbols\footnote{ are reserved symbols\cite{AgdaReadTheDocsStructure}} 
+and some reserved keywords\footnote{A full list of reserved keywords can be found at \cite{AgdaReadTheDocsStructure}}. This will be used a lot especially for mathematical symbols.
+
+Another important thing to mention is the integration into emacs, which works as an IDE and beside syntax highlighting supports many agda specific features some of which are pointed out in this publication.
+
+\subsection{Introduction example}
+As a start lets look at the so called datatype definition for Peano natural numbers. $\mathbb{N}$
+Placeholder: A short intoduction to agda. (Datatype definitions, pattern matching, normalization, etc).
+As most other functional languages Agda relies heavely on pattern matching. 
+\begin{codesnippet}[mathescape=true, caption={Peano natural numbers}, label={codeSnippet:natural_number}]
+data $\mathbb{N}$: Set where
+  zero : $\mathbb{N}$
+  suc: $\mathbb{N} \rightarrow \mathbb{N}$
+\end{codesnippet}
+\todo{Type levels}
+
+\subsection{Total languages}
+Placeholder: Agda and other languages based on type theory are total languages in the sense that a program e of type T will always terminate with a value in T. 
+No runtime error can occur and no nonterminating programs can be written (unless explicitly requested by the programmer)\cite{AgdaReadTheDocs}.
+
+\todo{Rewrite} Not only must they be pure \todo{what is pure exactly?} so using mutalbe data structures like array or io must be done carefully (the way Haskell does) - Agda also must be able to tell that they are guaranteed to terminate on all inputs. 
+This results in a los of turing completeness but guarantees that the type can always be deduced if it is a correct type. 
+This can be disabled for specific functions. For some functions this check for termination is done automatically, sometimes Agda needs some "hints" from the developer to be able to proof the termination of the corresponding function.
+\subsection{Proofs in the program}
+Placeholder: Introduction to proofs (external verification) in agda with a few examples.
+Curry-Howard isomorphism.
+\cite{norell:deptyped, 10.1145/2841316, plfa2019}
+
