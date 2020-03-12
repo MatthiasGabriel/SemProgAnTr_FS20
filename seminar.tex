@@ -11,31 +11,12 @@
 \usepackage{float}
 \usepackage{amssymb}
 \usepackage[hyphens]{url}
-
+\usepackage{mathtools}
 
 %%%%%%%%%%-----TODOS
 \setlength{\marginparwidth}{2cm}
 \usepackage[obeyFinal]{todonotes}
 
-%%%%%% OWN Pseudocode style
-
-\lstnewenvironment{algorithm}[1][]
-{   
-\renewcommand{\lstlistingname}{Algorithm}
-    \lstset{
-        mathescape=true,
-        frame=tB,
-        numbers=left, 
-        numberstyle=\tiny,
-        basicstyle=\scriptsize, 
-        keywordstyle=\color{black}\bfseries\em,
-        keywords={,input, output, return, datatype, function, if, else, foreach, while, begin, end, or, }
-        numbers=left,
-        xleftmargin=.04\textwidth,
-        #1
-    }
-}
-{}
 
 %%%%%% OWN Codesnippets
 \lstnewenvironment{codesnippet}[1][]
@@ -78,14 +59,7 @@
 \usepackage{tikz}
 \usepackage{adjustbox}
 \usepackage{amsmath}
-%%%%%%% Make it possible to write over a leftrightarrow
 
-\makeatletter
-\newcommand{\xleftrightarrow}[2][]{\ext@arrow 0099\Leftrightarrowfill@{#1}{#2}}
-\makeatother
-
-%%%%%% SPECIFY own MOD
-\newcommand{\Mod}[1]{\ (\mathrm{mod}\ #1)}
 
 %%%%%%%%%%-----REFERENCES
 \usepackage[hidelinks]{hyperref}	% Makes references clickable

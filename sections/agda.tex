@@ -14,12 +14,41 @@ Another important thing to mention is the integration into emacs, which works as
 As a start lets look at the so called datatype definition for Peano natural numbers. $\mathbb{N}$
 Placeholder: A short intoduction to agda. (Datatype definitions, pattern matching, normalization, etc).
 As most other functional languages Agda relies heavely on pattern matching. 
-\begin{codesnippet}[mathescape=true, caption={Peano natural numbers}, label={codeSnippet:natural_number}]
+To define a new datatype one simply has to specify the name of the type after the keyword data. Directly followed after the name the type of the new datatype is defined as Set. 
+Set is a special kind of type which is the type of types. This is required because in Agda every expression has a type. \todo{cite?}
+After this basic definition two different constructors "zero" and "suc" are defined. 
+There is little meaning behind this short definition other than elements constructed with this operations are of type $\mathbb{N}$.
+The only additional information is that suc requires another $\mathbb{N}$ to be constructed.
+
+\begin{codesnippet}[mathescape=true, caption={Definition of the peano natural numbers datatype in Agda}, label={codeSnippet:natural_number}]
 data $\mathbb{N}$: Set where
   zero : $\mathbb{N}$
   suc: $\mathbb{N} \rightarrow \mathbb{N}$
 \end{codesnippet}
-\todo{Type levels}
+
+Elements of $\mathbb{N}$ can now be constructed by calling the constructors and used in functions with pattern matching.
+\begin{codesnippet}[mathescape=true, caption={Some peano numbers}, label={codeSnippet:natural_number_constructor}]
+zero
+suc zero
+suc (suc (suc zero))
+\end{codesnippet}
+\begin{codesnippet}[mathescape=true, caption={Peano numbers addition}, label={codeSnippet:natural_number_addition}]
+_+_ : $\mathbb{N} \rightarrow \mathbb{N}$
+zero + n = n
+suc m + n = suc (m + n)
+\end{codesnippet}
+
+The definition of the list datatype is more complex as it contains a type parameter. The application of another datatype to the list datatype results in an own unique type, this concept is called type-level function. 
+In this specific example the function takes any type A at the type level $\ell$ and returns a new type, the concrete list type of A, at the same type level.\todo{research why this is required.}
+For example $\mathbb{L}$ $\mathbb{N}$ for the list of peano numbers.
+Actually it is possible to consider $\ell$ as an additional argument but with the usage of curly braces around $\ell$ we indicate that it should be inferred by Agda.
+When a parameter in a datatype definition is declared it can be used in the types of the constructors. For example the second constructor is defined as a function that take an argument x of type A and another argument xs of type $\mathbb{L}$ A and returns a new $\mathbb{L}$ A where A is exactly the type that was used to construct the type of the list.
+\begin{codesnippet}[mathescape=true, caption={Definition of the list datatype in Agda}, label={codeSnippet:list_datatype}]
+data $\mathbb{L}$ {$\ell$} (A : Set $\ell$) : Set $\ell$ where
+  [] : $\mathbb{L}$ A
+  _::_ : (x : A) (xs: $\mathbb{L}$ A) $\rightarrow \mathbb{L}$ A
+\end{codesnippet}
+
 
 \subsection{Total languages}
 Placeholder: Agda and other languages based on type theory are total languages in the sense that a program e of type T will always terminate with a value in T. 
