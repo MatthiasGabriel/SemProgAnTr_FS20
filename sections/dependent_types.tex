@@ -1,10 +1,34 @@
 \section{Dependent Types}
 \subsection{Introduction to dependent types}
 An introduction to dependent types in theory. Similar to Chapter 5.1 of \cite{10.1145/2841316}, but my objective is to be a little bit more general.
-
+\todo{similar to the introduction example}
+\todo{theory? maybe it is more clever to explain the theory after the example.}
 The primary objective is to present the basics of the feature and it's primary promises.
 
 \subsection{Example in Agda}
+In this chapter the first dependent datatype in Agda the vector will be defined.
+It is basically a list but in contrast to the list datatype defined in chapter \ref{section:agda_introduction_example} the length of the list is a part of the type.
+
+In addition to the implicit type-level and the type A an additional parameter of type $\mathbb{N}$ is defined in the type definition as shown in code snippet \ref{codeSnippet:vector_datatype}.
+The first constructor for the empty vector sets the length of the the vector to the fixed value zero of $\mathbb{N}$ because it is known that the list is currently empty and the length is therefore 0.
+The second constructor is used to add new elements to an existing vector. It takes two arguments one of type A and one of type $\mathbb{V}$ A n similar to the list but additionally it determines the implicit argument n of type $\mathbb{N}$ from the input vector.
+This parameter is then used to define the return type. As exactly one new element is added to the existing list of type $\mathbb{V}$ A n it is known that the new type has to be $\mathbb{V}$ A (suc n).
+\begin{codesnippet}[mathescape=true, caption={Definition of the vector datatype in Agda}, label={codeSnippet:vector_datatype}]
+data $\mathbb{V}$ {$\ell$} (A : Set $\ell$) : $\mathbb{N}$ $\rightarrow$ Set $\ell$ where
+  [] : $\mathbb{V}$ A zero
+  _::_ : {n : $\mathbb{N}$} (x : A) (xs: $\mathbb{V}$ A n) $\rightarrow$
+         $\mathbb{V}$ A (suc n)
+\end{codesnippet}
+
+Appending two vectors - as seen in code snippet \ref{codeSnippet:vector_append} - is a mix between the appending of two lists and the datatype definition of the vector and relatively straightforward.
+To prevent a naming conflict between the append operators of lists and vectors the unique name _++$\mathbb{V}_ was choosen.
+\begin{codesnippet}[mathescape=true, caption={Definition of the vector append function in Agda}, label={codeSnippet:vector_append}]
+_++$\mathbb{V}$_ : $\forall$ {$\ell$} {A : Set $\ell$}  {n m: $\mathbb{N}$ $\rightarrow$
+        $\mathbb{V}$ A n $\rightarrow \mathbb{V}$ A m $\rightarrow \mathbb{V}$ A (n + m)
+  []        ++$\mathbb{V}$ ys = ys
+  (x :: xs) ++$\mathbb{V}$ ys = x :: (xs ++$\mathbb{V}$ ys)
+\end{codesnippet}
+
 "Hello world" of dependently typed programming aka vector append aswell as at least one example that shows the main benefit in relation to a "normal" list.
 This will most probably be the "nth"-function.
 
