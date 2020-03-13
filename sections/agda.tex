@@ -23,7 +23,7 @@ The only additional information is that suc requires another $\mathbb{N}$ to be 
 \begin{codesnippet}[mathescape=true, caption={Definition of the peano natural numbers datatype in Agda}, label={codeSnippet:natural_number}]
 data $\mathbb{N}$: Set where
   zero : $\mathbb{N}$
-  suc: $\mathbb{N} \rightarrow \mathbb{N}$
+  suc : $\mathbb{N} \rightarrow \mathbb{N}$
 \end{codesnippet}
 
 Elements of $\mathbb{N}$ can now be constructed by calling the constructors and used in functions with pattern matching.
@@ -34,23 +34,63 @@ suc (suc (suc zero))
 \end{codesnippet}
 \begin{codesnippet}[mathescape=true, caption={Peano numbers addition}, label={codeSnippet:natural_number_addition}]
 _+_ : $\mathbb{N} \rightarrow \mathbb{N}$
-zero + n = n
+zero  + n = n
 suc m + n = suc (m + n)
 \end{codesnippet}
 
-The definition of the list datatype is more complex as it contains a type parameter. The application of another datatype to the list datatype results in an own unique type, this concept is called type-level function. 
+
+The definition of the list datatype as seen in code snippet \ref{codeSnippet:list_datatype} is more complex as it contains a type parameter. The application of another datatype to the list datatype results in an own unique type, this concept is called type-level function. 
+
 In this specific example the function takes any type A at the type level $\ell$ and returns a new type, the concrete list type of A, at the same type level.\todo{research why this is required.}
 For example $\mathbb{L}$ $\mathbb{N}$ for the list of peano numbers.
+
 Actually it is possible to consider $\ell$ as an additional argument but with the usage of curly braces around $\ell$ we indicate that it should be inferred by Agda.
-When a parameter in a datatype definition is declared it can be used in the types of the constructors. For example the second constructor is defined as a function that take an argument x of type A and another argument xs of type $\mathbb{L}$ A and returns a new $\mathbb{L}$ A where A is exactly the type that was used to construct the type of the list.
+When a parameter in a datatype definition is declared it can be used in the types of the constructors. 
+For example the second constructor is defined as a function that take an argument x of type A and another argument xs of type $\mathbb{L}$ A and returns a new $\mathbb{L}$ A where A is exactly the type that was used to construct the type of the list.
 \begin{codesnippet}[mathescape=true, caption={Definition of the list datatype in Agda}, label={codeSnippet:list_datatype}]
 data $\mathbb{L}$ {$\ell$} (A : Set $\ell$) : Set $\ell$ where
   [] : $\mathbb{L}$ A
   _::_ : (x : A) (xs: $\mathbb{L}$ A) $\rightarrow \mathbb{L}$ A
 \end{codesnippet}
 
+With the help of the two constructors it is possible to construct any possible list. As the next step the function which appends two lists of the same type. In combination with the examples in chapter \ref{section:dependent_types} this will help to understand the difference between generic types and dependent types.
 
-\subsection{Total languages}
+To call the append function, in code snippet \ref{codeSnippet:list_append} implemented as the ++ operator two implicit and two explicit arguments are required. 
+Agda infers the correct type-level $\ell$ and the type A from the explicit arguments of type $\mathbb{L}$ A. Note that both lists are required to have exactly the same type.
+Due to that fact it is proven that x is of type A and xs aswell as ys are of type $\mathbb{L}$ A. Because the second constructor of $\mathbb{L}$ is used its also proven that the return value 
+\todo{Research and explain forall}
+\begin{codesnippet}[mathescape=true, caption={Definition list append function in Agda}, label={codeSnippet:list_append}]
+_++_ : $\forall$ {$\ell$} {A : Set $\ell$} $\rightarrow \mathbb{L}$ A$\rightarrow \mathbb{L}$ A$\rightarrow \mathbb{L}$ A
+  []        ++ ys = ys
+  (x :: xs) ++ ys = x :: (xs ++ ys)
+\end{codesnippet}
+
+The second function for lists that is of interest in this topic is nth. It is the function which returns the nth element of an existing list.
+One problem that has to be solved is when there are not enough elements in the list to return the nth element. 
+In many programming languages this results in an exception which is not possible in agda.
+More details on this can be found in the following chapter \ref{section:total_languages}.
+
+To overcome this an additional datatype "maybe" - in other languages such as Java called optional - needs to be introduced.
+This datatype is essentially either a wrapper around another element or a placeholder for a not existing element.
+\begin{codesnippet}[mathescape=true, caption={Definition of the maybe datatype in Agda}, label={codeSnippet:maybe_datatype}]
+data maybe {$\ell$} (A : Set $\ell$) : Set $\ell$ where
+  just : A $\rightarrow$ maybe A
+  nothing : maybe A
+\end{codesnippet}
+
+The function "nth" as shown in code snippet \ref{codeSnippet:list_nth} takes two implizit arguments for the type-level and the type A itself.
+In addition to the implizit arguments an element of type $\mathbb{N}$ namely the index of the required element aswell as the list itself have to be specified.
+If the function is called with an empty list, either directly or in the recursion it will return the element nothing of type maybe indicating that no element was found at this position.
+
+This solves the problem for the function nth but everywhere where the nth function is used a case distinction is required to handle this potential outcome.
+\begin{codesnippet}[mathescape=true, caption={Definition of nth function in Agda}, label={codeSnippet:list_nth}]
+nth : $\forall$ {$\ell$} {A : Set $\ell$} $\rightarrow \mathbb{N}$ $\rightarrow \mathbb{L}$ A $\rightarrow$ maybe A
+nth _ [] = nothing
+nth 0 (x :: xs) = just x
+nth (suc n) (x :: xs) = nth n xs
+\end{codesnippet}
+
+\subsection{Total languages}\label{section:total_languages}
 Placeholder: Agda and other languages based on type theory are total languages in the sense that a program e of type T will always terminate with a value in T. 
 No runtime error can occur and no nonterminating programs can be written (unless explicitly requested by the programmer)\cite{AgdaReadTheDocs}.
 
