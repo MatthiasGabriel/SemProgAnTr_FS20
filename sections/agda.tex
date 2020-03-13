@@ -10,7 +10,7 @@ and some reserved keywords\footnote{A full list of reserved keywords can be foun
 
 Another important thing to mention is the integration into emacs, which works as an IDE and beside syntax highlighting supports many agda specific features some of which are pointed out in this publication.
 
-\subsection{Introduction example}
+\subsection{Introduction example}\label{section:agda_introduction_example}
 As a start lets look at the so called datatype definition for Peano natural numbers. $\mathbb{N}$
 Placeholder: A short intoduction to agda. (Datatype definitions, pattern matching, normalization, etc).
 As most other functional languages Agda relies heavely on pattern matching. 
@@ -44,6 +44,7 @@ The definition of the list datatype as seen in code snippet \ref{codeSnippet:lis
 In this specific example the function takes any type A at the type level $\ell$ and returns a new type, the concrete list type of A, at the same type level.\todo{research why this is required.}
 For example $\mathbb{L}$ $\mathbb{N}$ for the list of peano numbers.
 
+\todo{maybe move this "list" block closer to dependent types to be able to compare it better.}
 Actually it is possible to consider $\ell$ as an additional argument but with the usage of curly braces around $\ell$ we indicate that it should be inferred by Agda.
 When a parameter in a datatype definition is declared it can be used in the types of the constructors. 
 For example the second constructor is defined as a function that take an argument x of type A and another argument xs of type $\mathbb{L}$ A and returns a new $\mathbb{L}$ A where A is exactly the type that was used to construct the type of the list.
@@ -59,7 +60,7 @@ To call the append function, in code snippet \ref{codeSnippet:list_append} imple
 Agda infers the correct type-level $\ell$ and the type A from the explicit arguments of type $\mathbb{L}$ A. Note that both lists are required to have exactly the same type.
 Due to that fact it is proven that x is of type A and xs aswell as ys are of type $\mathbb{L}$ A. Because the second constructor of $\mathbb{L}$ is used its also proven that the return value 
 \todo{Research and explain forall}
-\begin{codesnippet}[mathescape=true, caption={Definition list append function in Agda}, label={codeSnippet:list_append}]
+\begin{codesnippet}[mathescape=true, caption={Definition of the list append function in Agda}, label={codeSnippet:list_append}]
 _++_ : $\forall$ {$\ell$} {A : Set $\ell$} $\rightarrow \mathbb{L}$ A$\rightarrow \mathbb{L}$ A$\rightarrow \mathbb{L}$ A
   []        ++ ys = ys
   (x :: xs) ++ ys = x :: (xs ++ ys)
@@ -94,9 +95,15 @@ nth (suc n) (x :: xs) = nth n xs
 Placeholder: Agda and other languages based on type theory are total languages in the sense that a program e of type T will always terminate with a value in T. 
 No runtime error can occur and no nonterminating programs can be written (unless explicitly requested by the programmer)\cite{AgdaReadTheDocs}.
 
-\todo{Rewrite} Not only must they be pure \todo{what is pure exactly?} so using mutalbe data structures like array or io must be done carefully (the way Haskell does) - Agda also must be able to tell that they are guaranteed to terminate on all inputs. 
-This results in a los of turing completeness but guarantees that the type can always be deduced if it is a correct type. 
-This can be disabled for specific functions. For some functions this check for termination is done automatically, sometimes Agda needs some "hints" from the developer to be able to proof the termination of the corresponding function.
+In relation to other programming languages of all kind of different paradigms, Agda is a so called total programming language \cite{AgdaReadTheDocs}.
+This means that every valid Agda programs will always terminate with the correct type. There is literally no exception to this.
+
+In contrast to this non total languages often also terminate with the correct type, but they may also not terminate or raise an exception due to the fact that something was not as expected and the behaviour for special case was not defined.
+
+Normal Agda programs will not compile if there is an incomplete definition such as a side case that is not covered.
+
+For some programs the check for termination can be done automatically, but sometimes Agda needs some "hints" from the developer to be able to proof the termination of the corresponding program.
+
 \subsection{Proofs in the program}
 Placeholder: Introduction to proofs (external verification) in agda with a few examples.
 Curry-Howard isomorphism.
