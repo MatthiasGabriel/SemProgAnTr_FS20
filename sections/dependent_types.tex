@@ -13,6 +13,7 @@ In addition to the implicit type-level and the type A an additional parameter of
 The first constructor for the empty vector sets the length of the the vector to the fixed value zero of $\mathbb{N}$ because it is known that the list is currently empty and the length is therefore 0.
 The second constructor is used to add new elements to an existing vector. It takes two arguments one of type A and one of type $\mathbb{V}$ A n similar to the list but additionally it determines the implicit argument n of type $\mathbb{N}$ from the input vector.
 This parameter is then used to define the return type. As exactly one new element is added to the existing list of type $\mathbb{V}$ A n it is known that the new type has to be $\mathbb{V}$ A (suc n).
+
 \begin{codesnippet}[mathescape=true, caption={Definition of the vector datatype in Agda}, label={codeSnippet:vector_datatype}]
 data $\mathbb{V}$ {$\ell$} (A : Set $\ell$) : $\mathbb{N}$ $\rightarrow$ Set $\ell$ where
   [] : $\mathbb{V}$ A zero
@@ -21,7 +22,14 @@ data $\mathbb{V}$ {$\ell$} (A : Set $\ell$) : $\mathbb{N}$ $\rightarrow$ Set $\e
 \end{codesnippet}
 
 Appending two vectors - as seen in code snippet \ref{codeSnippet:vector_append} - is a mix between the appending of two lists and the datatype definition of the vector and relatively straightforward.
-To prevent a naming conflict between the append operators of lists and vectors the unique name _++$\mathbb{V}_ was choosen.
+
+To prevent a naming conflict between the append operators of lists and vectors the unique name \_++$\mathbb{V}$\_ was choosen.
+
+Either a vector append happens with an empty vector to another vector or an non empty vector is appended to another vector as shown at lines 3 and 4 respectively.
+
+It is important to note is that the type of these two vectors does not need to be equal as the $\mathbb{N}$ parameter which is also a part of the type, can have different values but the elements contained in both vectors are still required to be of type A.
+
+Following from this the newly constructed vector has the type $\mathbb{V}$ A (n + m).
 \begin{codesnippet}[mathescape=true, caption={Definition of the vector append function in Agda}, label={codeSnippet:vector_append}]
 _++$\mathbb{V}$_ : $\forall$ {$\ell$} {A : Set $\ell$}  {n m: $\mathbb{N}$ $\rightarrow$
         $\mathbb{V}$ A n $\rightarrow \mathbb{V}$ A m $\rightarrow \mathbb{V}$ A (n + m)
@@ -29,8 +37,35 @@ _++$\mathbb{V}$_ : $\forall$ {$\ell$} {A : Set $\ell$}  {n m: $\mathbb{N}$ $\rig
   (x :: xs) ++$\mathbb{V}$ ys = x :: (xs ++$\mathbb{V}$ ys)
 \end{codesnippet}
 
-"Hello world" of dependently typed programming aka vector append aswell as at least one example that shows the main benefit in relation to a "normal" list.
-This will most probably be the "nth"-function.
+Until this point there is little advantage in using $\mathbb{V}$ over $\mathbb{L}$ as we only saw methods that construct new elements of $\mathbb{V}$.
+
+The next example will present the first benefit of including the length in the datatype.
+In case of the list datattype $\mathbb{L}$ it was required to define an additional helper datatype maybe as described in chapter \ref{section:agda_introduction_example} when implementing the nth function.
+Additionally every time when using the function the programmer has to think of this different cases nothing or just and adjust his functionality - normally with additional pattern matching.
+
+The corresponding function nth$\mathbb{V}$ has an additional implicit parameter m of type $\mathbb{N}$ which represents the length of the input vector. 
+And additionally the second explicit parameter is a proof that n is less than m. And it returns always an A instead of a maybe A as it was before.
+
+Lets have a little bit closer look at this whole function in code snippet \ref{codeSnippet:vector_nth} starting with line 3 which just states that if the element at index 0 is wanted the head of the list is returned. 
+The proof and the tail of the list are not required to do this an therefore replaced by an \_. This is the first base case.
+
+At line 4 the recursive case is defined which calls nth$\mathbb{V}$ again but with the predecessor of n and the tail of the current vector.
+The proof p is directly passed into the new function call. At the first glance this might look a little bit unusual, but because both the index as well as the length of the new vector, in the recursion case xs, 
+are decreased by exactly onethe proof still holds as suc n < suc m $\equiv$ tt and n < m $\equiv$ tt are definitially equal.\todo{explain definitially equal.}\todo{explain "proof"}\todo{research and explain how the first proof gets created.}
+
+Now lets focus at the last two lines which look quite different than any of the definitions we saw.
+Because it is not possible to prove that suc n < m where m is the length of the empty list, or more concretely zero, the so called absurd pattern can be used. This basically tells agda that this case can never be reached and therefore no definition for this case has to exist.
+Because of the definition of \_<\_ of $\mathbb{N}$ an the last line is required too which proves that zero < zero $\equiv$ tt is false aswell. \todo{explain absurd pattern} \todo{maybe explain more why this different cases are required.}
+
+\begin{codesnippet}[mathescape=true, caption={Definition of nth function in Agda}, label={codeSnippet:vector_nth}]
+nth$\mathbb{V}$ : $\forall$ {$\ell$} {A : Set $\ell$} {m : $\mathbb{N}$} $\rightarrow$
+       n : $\mathbb{N}$ $\rightarrow$ n < m $\equiv$ tt $\rightarrow \mathbb{V}$ A m $\rightarrow$ A
+nth$\mathbb{V}$ zero _ (x :: _) = x
+nth$\mathbb{V}$ (suc n) p (_ :: xs) = nth$\mathbb{V}$ n p xs
+nth$\mathbb{V}$ (suc n) () []
+nth$\mathbb{V}$ zero () []
+\end{codesnippet}
+
 
 \subsection{Advanced theory}
 Some more advanced features such as $\Sigma$-types and $\Pi$-types.
