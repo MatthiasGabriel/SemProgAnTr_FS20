@@ -51,11 +51,11 @@ The proof and the tail of the list are not required to do this an therefore repl
 
 At line 4 the recursive case is defined which calls nth$\mathbb{V}$ again but with the predecessor of n and the tail of the current vector.
 The proof p is directly passed into the new function call. At the first glance this might look a little bit unusual, but because both the index as well as the length of the new vector, in the recursion case xs, 
-are decreased by exactly onethe proof still holds as suc n < suc m $\equiv$ tt and n < m $\equiv$ tt are definitially equal.\todo{explain definitially equal.}\todo{explain "proof"}\todo{research and explain how the first proof gets created.}
+are decreased by exactly onethe proof still holds as suc n < suc m $\equiv$ tt and n $<$ m $\equiv$ tt are definitially equal.\todo{explain definitially equal.}\todo{explain "proof"}\todo{research and explain how the first proof gets created.}
 
 Now lets focus at the last two lines which look quite different than any of the definitions we saw.
-Because it is not possible to prove that suc n < m where m is the length of the empty list, or more concretely zero, the so called absurd pattern can be used. This basically tells agda that this case can never be reached and therefore no definition for this case has to exist.
-Because of the definition of \_<\_ of $\mathbb{N}$ an the last line is required too which proves that zero < zero $\equiv$ tt is false aswell. \todo{explain absurd pattern} \todo{maybe explain more why this different cases are required.}
+Because it is not possible to prove that suc n $<$ m where m is the length of the empty list, or more concretely zero, the so called absurd pattern can be used. This basically tells agda that this case can never be reached and therefore no definition for this case has to exist.
+Because of the definition of \_$<$\_ of $\mathbb{N}$ on the last line is required too which proves that zero $<$ zero $\equiv$ tt is false aswell. \todo{explain absurd pattern} \todo{maybe explain more why this different cases are required.}
 
 \begin{codesnippet}[mathescape=true, caption={Definition of nth function in Agda}, label={codeSnippet:vector_nth}]
 nth$\mathbb{V}$ : $\forall$ {$\ell$} {A : Set $\ell$} {m : $\mathbb{N}$} $\rightarrow$
@@ -64,6 +64,15 @@ nth$\mathbb{V}$ zero _ (x :: _) = x
 nth$\mathbb{V}$ (suc n) p (_ :: xs) = nth$\mathbb{V}$ n p xs
 nth$\mathbb{V}$ (suc n) () []
 nth$\mathbb{V}$ zero () []
+\end{codesnippet}
+
+To call this function you now have to deliver a proof that m $<$ n is equivalent to tt. This can easely be done by using refl.\todo{explain refl}
+\begin{codesnippet}[mathescape=true, caption={Definition of nth function in Agda}, label={codeSnippet:vector_nth}]
+test-vector : $\mathbb{V}$ $\mathbb{B}$ 4
+test-vector = ff :: tt :: ff :: ff :: []
+element = nth$\mathbb{V}$ 3 refl test-vector
+
+invalid_element = nth$\mathbb{V}$ 4 refl test-vector
 \end{codesnippet}
 
 
