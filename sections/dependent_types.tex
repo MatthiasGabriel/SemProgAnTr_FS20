@@ -5,7 +5,40 @@ An introduction to dependent types in theory. Similar to Chapter 5.1 of \cite{10
 \todo{theory? maybe it is more clever to explain the theory after the example.}
 The primary objective is to present the basics of the feature and it's primary promises.
 
-\subsection{Example in Agda}
+There are different kind of dependent types. The two most common ones are $\Sigma$-types and $\Pi$-types.
+Lets first focus on the $\Pi$-types, which are also used in our first example in section \ref{section_dependent_types_example}. These types are sometimes also called \emph{dependent function types} as in \cite{10.1145/2841316} or \emph{dependent product type} as in \cite{10.5555/1076265}. Be aware that the name dependent product type can also be used for $\Sigma$-types as in \cite{10.1145/2841316}.
+
+Lets remember the example from the introduction in chapter \ref{section:introduction} where the length of a list is specified directly in the type. This data structure is in literature \cite{10.1145/2841316} \cite{10.5555/1076265} often called vector.
+This new data structure is not a simple type but maps an input of type Nat to a specific type. To differentiate between it and normal types the term \emph{type family} is used as suggested by Aspinall and Hofmann in \cite{10.5555/1076265}.
+
+$$Vector :: Nat \rightarrow *$$
+
+The type which contains vectors of length k can be constructed by applying k to Vectoror more concretely Vector k.
+To construct new Vectors two constructors are needed. One which constructs an empty vector and one to add new elements to the vector. This pattern should be familiar for everyone that is used to functional programming so far.
+The second constructor \emph{cons} takes one element n of type Nat, an element of type data aswell as a vector with the lenght n and returns a new vector of length n+1. This is clearly understandable as the new element is added to the input vector. 
+
+$$empty: Vector \, 0$$
+$$cons : \Pi n : Nat. \, data \rightarrow Vector \, n \rightarrow Vector \, (n+1)$$
+
+Dependent function types can be described as $\Pi x : A. B$ where x can be used to define B. 
+This is the generalization of the arrow type used in simply typed lambda-calculus. Every arrow type can also be expressed as a $\Pi$-type.
+
+$$A \rightarrow B \, = \, \Pi x:A.B$$
+$$where \, x \, does \, not \, appear \, free \, in \, B$$
+
+Another description for the $\Pi$-type is the following. A function maps an element $a \in A$ to a new element $b \in B_a$. 
+This is also called type B is indexed by type A \cite{10.1145/2841316}.
+
+This additional information that is now encoded in the type can be exploited whenever such a type is used. As a first example lets define the function first which returns the first element of a vector.
+In contradition to lists its now possible to specify that only non-empty vectors can be be used as an argument. 
+This simpifies the implementation of $first$ and also each usage of $first$ as no exception handling for the empty data structure is necessary. 
+If the function can be called with a specific instance then it is guaranteed by the type system that an instance of data is returned.
+
+$$first : \Pi n : Nat.Vector(n+1) \rightarrow data$$
+
+To be more clear what this means in practice lets consider a few examples in agda.
+
+\subsection{Example in Agda}\label{section_dependent_types_example}
 In this chapter the first dependent datatype in Agda the vector will be defined.
 It is basically a list but in contrast to the list datatype defined in chapter \ref{section:agda_introduction_example} the length of the list is a part of the type.
 
@@ -66,7 +99,7 @@ nth$\mathbb{V}$ (suc n) () []
 nth$\mathbb{V}$ zero () []
 \end{codesnippet}
 
-To call this function you now have to deliver a proof that m $<$ n is equivalent to tt. This can easely be done by using refl.\todo{explain refl}
+To call this function you now have to deliver a proof that m $<$ n is equivalent to tt. This can easely be done by using refl.\todo{explain refl} \todo{state that a digit representation is possible without going into details about pragmas. Maybe in the agda section.}
 \begin{codesnippet}[mathescape=true, caption={Definition of nth function in Agda}, label={codeSnippet:vector_nth}]
 test-vector : $\mathbb{V}$ $\mathbb{B}$ 4
 test-vector = ff :: tt :: ff :: ff :: []
@@ -76,8 +109,13 @@ invalid_element = nth$\mathbb{V}$ 4 refl test-vector
 \end{codesnippet}
 
 
-\subsection{Advanced theory}
-Some more advanced features such as $\Sigma$-types and $\Pi$-types.
+\subsection{$\Sigma$-types}
+In addition to $\Pi$-types there exists a second important class of dependent types. The $\Sigma$-types also called \emph{dependent product types}\cite{10.1145/2841316},\emph{dependent pair types}\cite{10.1145/2841316} or \emph{dependent sum types}\cite{10.5555/1076265}.
+A $\Sigma$-type is essentially a combination of two types where each element of this type is a pair. But the type of the second element of the pair may depend on the value of first element.
+To give another description that describes the $\Sigma$-type well is the following. Elements of the type are pairs $(a, b)$ under the condition that $a \in A$ and $b \in B_a$.
 
+
+
+The simplest example 
 \subsection{Advanced Example in Agda}
 A more advanced example in agda. Such as brown tree or even parts of the huffman encoding.
