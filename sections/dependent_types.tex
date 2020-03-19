@@ -23,11 +23,14 @@ $$cons : \Pi n : Nat. \, data \rightarrow Vector \, n \rightarrow Vector \, (n+1
 Dependent function types can be described as $\Pi x : A. B$ where x can be used to define B. 
 This is the generalization of the arrow type used in simply typed lambda-calculus. Every arrow type can also be expressed as a $\Pi$-type.
 
+\todo{Verify}
 $$A \rightarrow B \, = \, \Pi x:A.B$$
 $$where \, x \, does \, not \, appear \, free \, in \, B$$
 
 Another description for the $\Pi$-type is the following. A function maps an element $a \in A$ to a new element $b \in B_a$. 
 This is also called type B is indexed by type A \cite{10.1145/2841316}.
+
+\todo{Extend this with relation to Curry-Howard Isomorphism/Correspondence as universal quantification}
 
 This additional information that is now encoded in the type can be exploited whenever such a type is used. As a first example lets define the function first which returns the first element of a vector.
 In contradition to lists its now possible to specify that only non-empty vectors can be be used as an argument. 
@@ -35,6 +38,7 @@ This simpifies the implementation of $first$ and also each usage of $first$ as n
 If the function can be called with a specific instance then it is guaranteed by the type system that an instance of data is returned.
 
 $$first : \Pi n : Nat.Vector(n+1) \rightarrow data$$
+
 
 To be more clear what this means in practice lets consider a few examples in agda.
 
@@ -73,16 +77,17 @@ _++$\mathbb{V}$_ : $\forall$ {$\ell$} {A : Set $\ell$}  {n m: $\mathbb{N}$ $\rig
 Until this point there is little advantage in using $\mathbb{V}$ over $\mathbb{L}$ as we only saw methods that construct new elements of $\mathbb{V}$.
 
 The next example will present the first benefit of including the length in the datatype.
-In case of the list datattype $\mathbb{L}$ it was required to define an additional helper datatype maybe as described in chapter \ref{section:agda_introduction_example} when implementing the nth function.
+In case of the list datattype $\mathbb{L}$ it was required to define an additional helper datatype maybe as described in chapter \ref{section:agda_introduction_example} when implementing the \emph{nth} function.
 Additionally every time when using the function the programmer has to think of this different cases nothing or just and adjust his functionality - normally with additional pattern matching.
 
-The corresponding function nth$\mathbb{V}$ has an additional implicit parameter m of type $\mathbb{N}$ which represents the length of the input vector. 
-And additionally the second explicit parameter is a proof that n is less than m. And it returns always an A instead of a maybe A as it was before.
+The corresponding function \emph{nth$\mathbb{V}$} has an additional implicit parameter m of type $\mathbb{N}$ which represents the length of the input vector. 
+The second explicit parameter is a proof that n is less than m. 
+The function returns always an A instead of a maybe A as it was before.
 
 Lets have a little bit closer look at this whole function in code snippet \ref{codeSnippet:vector_nth} starting with line 3 which just states that if the element at index 0 is wanted the head of the list is returned. 
 The proof and the tail of the list are not required to do this an therefore replaced by an \_. This is the first base case.
 
-At line 4 the recursive case is defined which calls nth$\mathbb{V}$ again but with the predecessor of n and the tail of the current vector.
+At line 4 the recursive case is defined which calls \emph{nth$\mathbb{V}$} again but with the predecessor of n and the tail of the current vector.
 The proof p is directly passed into the new function call. At the first glance this might look a little bit unusual, but because both the index as well as the length of the new vector, in the recursion case xs, 
 are decreased by exactly onethe proof still holds as suc n < suc m $\equiv$ tt and n $<$ m $\equiv$ tt are definitially equal.\todo{explain definitially equal.}\todo{explain "proof"}\todo{research and explain how the first proof gets created.}
 
@@ -90,7 +95,7 @@ Now lets focus at the last two lines which look quite different than any of the 
 Because it is not possible to prove that suc n $<$ m where m is the length of the empty list, or more concretely zero, the so called absurd pattern can be used. This basically tells agda that this case can never be reached and therefore no definition for this case has to exist.
 Because of the definition of \_$<$\_ of $\mathbb{N}$ on the last line is required too which proves that zero $<$ zero $\equiv$ tt is false aswell. \todo{explain absurd pattern} \todo{maybe explain more why this different cases are required.}
 
-\begin{codesnippet}[mathescape=true, caption={Definition of nth function in Agda}, label={codeSnippet:vector_nth}]
+\begin{codesnippet}[mathescape=true, caption={Definition of \emph{nth} function in Agda}, label={codeSnippet:vector_nth}]
 nth$\mathbb{V}$ : $\forall$ {$\ell$} {A : Set $\ell$} {m : $\mathbb{N}$} $\rightarrow$
        n : $\mathbb{N}$ $\rightarrow$ n < m $\equiv$ tt $\rightarrow \mathbb{V}$ A m $\rightarrow$ A
 nth$\mathbb{V}$ zero _ (x :: _) = x
@@ -100,7 +105,7 @@ nth$\mathbb{V}$ zero () []
 \end{codesnippet}
 
 To call this function you now have to deliver a proof that m $<$ n is equivalent to tt. This can easely be done by using refl.\todo{explain refl} \todo{state that a digit representation is possible without going into details about pragmas. Maybe in the agda section.}
-\begin{codesnippet}[mathescape=true, caption={Definition of nth function in Agda}, label={codeSnippet:vector_nth}]
+\begin{codesnippet}[mathescape=true, caption={Usage of \emph{nth} function in Agda}, label={codeSnippet:vector_nth_usage}]
 test-vector : $\mathbb{V}$ $\mathbb{B}$ 4
 test-vector = ff :: tt :: ff :: ff :: []
 element = nth$\mathbb{V}$ 3 refl test-vector
@@ -110,12 +115,34 @@ invalid_element = nth$\mathbb{V}$ 4 refl test-vector
 
 
 \subsection{$\Sigma$-types}
-In addition to $\Pi$-types there exists a second important class of dependent types. The $\Sigma$-types also called \emph{dependent product types}\cite{10.1145/2841316},\emph{dependent pair types}\cite{10.1145/2841316} or \emph{dependent sum types}\cite{10.5555/1076265}.
-A $\Sigma$-type is essentially a combination of two types where each element of this type is a pair. But the type of the second element of the pair may depend on the value of first element.
-To give another description that describes the $\Sigma$-type well is the following. Elements of the type are pairs $(a, b)$ under the condition that $a \in A$ and $b \in B_a$.
+In addition to $\Pi$-types there exists a second important class of dependent types. 
+The $\Sigma$-types also called \emph{dependent product types}\cite{10.1145/2841316},\emph{dependent pair types}\cite{10.1145/2841316} or \emph{dependent sum types}\cite{10.5555/1076265}.
+
+A $\Sigma$-type is the generalization of the ordinary product type. 
+It is basically a combination of two types where each element of this type is a pair. 
+But the type of the second element of the pair may depend on the value of first element.
+
+\todo{Verify}
+$$\Sigma x: A.B \,= \, A \times B$$
+$$where \, x \, does \, not \, appear \, free \, in \, B$$
 
 
+Another well description for the $\Sigma$-type is the following. 
+Elements of the type are pairs $(a, b)$ under the condition that $a \in A$ and $b \in B_a$.
 
-The simplest example 
+\todo{Extend this with relation to Curry-Howard Isomorphism/Correspondence as existential quantification}
+Dependent $\Sigma$-types are often used to express an element with a certain property and its corresponding proof.
+\todo{maybe add an example}
+
 \subsection{Advanced Example in Agda}
+The simplest example for $\Sigma$-types in agda is the type of the nonzero peano numbers.
+It is directly based on the peano numbers $\mathbb{N}$ defined in section \ref{section:agda_introduction_example}.
+
+The definition of $\mathbb{N}^+$ states that each element is a pair of a peano number combined with the proof that this specific number applied to the \emph{iszero} function returns false.
+
+\begin{codesnippet}[mathescape=true, caption={Definition of nonzero peano numbers in Agda}, label={codeSnippet:nonzero_natural_number}]
+$\mathbb{N}^+ : Set$
+$\mathbb{N}^+$ = $\Sigma$ $\mathbb{N}$ ($\lambda$ n $\rightarrow$ iszero n $\equiv$ ff)
+\end{codesnippet}
+
 A more advanced example in agda. Such as brown tree or even parts of the huffman encoding.
