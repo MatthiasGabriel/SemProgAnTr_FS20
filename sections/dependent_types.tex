@@ -134,15 +134,43 @@ Elements of the type are pairs $(a, b)$ under the condition that $a \in A$ and $
 Dependent $\Sigma$-types are often used to express an element with a certain property and its corresponding proof.
 \todo{maybe add an example}
 
-\subsection{Advanced Example in Agda}
+\subsection{$\Sigma$-types in Agda}
 The simplest example for $\Sigma$-types in agda is the type of the nonzero peano numbers.
 It is directly based on the peano numbers $\mathbb{N}$ defined in section \ref{section:agda_introduction_example}.
 
 The definition of $\mathbb{N}^+$ states that each element is a pair of a peano number combined with the proof that this specific number applied to the \emph{iszero} function returns false.
 
 \begin{codesnippet}[mathescape=true, caption={Definition of nonzero peano numbers in Agda}, label={codeSnippet:nonzero_natural_number}]
-$\mathbb{N}^+ : Set$
+$\mathbb{N}^+$ : Set
 $\mathbb{N}^+$ = $\Sigma$ $\mathbb{N}$ ($\lambda$ n $\rightarrow$ iszero n $\equiv$ ff)
 \end{codesnippet}
 
+The $\Sigma$ used in code snippet \ref{codeSnippet:nonzero_natural_number} from IAL is a simplification of the stdlib of agda and only consists of three lines shown in code snippet \ref{codeSnippet:sigma}.
+
+The $\Sigma$ type constructor takes two explicit and two implicit arguments. 
+The first type argument is the type A of level $\ell$, the second type argument is a function of type B which takes an element of A and returns a new type of level $\ell '$.
+The type level of $\Sigma$ will be at $\ell$ $\sqcup$ $\ell '$. The operator $\sqcup$ is part of Agda's primitive level system and takes the maximum of the two input levels.
+
+The constructor for new elements of type $\Sigma$ is a single comma, which allows it to express $\Sigma$ elements as pairs.
+The  usage of the variable a of type A in the type definition of b shows the direct dependence of the second component to the value of the first component.
+
+\begin{codesnippet}[mathescape=true, caption={Definition of $\Sigma$ in Agda}, label={codeSnippet:sigma}]
+data $\Sigma$ {$\ell$ $\ell '$} (A : Set $\ell$) (B : A $\rightarrow$ Set $\ell '$)
+ : Set ($\ell$ $\sqcup$ $\ell '$) where
+_,_ : (a : A) $\rightarrow$ (b : B a) $\rightarrow$ $\Sigma$ A B
+\end{codesnippet}
+
+Code snippet \ref{codeSnippet:nonzero_natural_number_suc} contains the successor function of $\mathbb{N}^+$ which returns the next nonzero peano number.
+As an input argument it takes an element of $\mathbb{N}^+$ and returns a new element $\mathbb{N}^+$. 
+With pattern matching the element of $\mathbb{N}^+$ is disassembled into the number x and the proof p as defined in code snippet \ref{codeSnippet:nonzero_natural_number}.
+
+The return value is constructed by the applying the function suc to the variable x as the first part of the pair and the refl proof as the second part of the pair.
+Agda is able to proof that \emph{iszero (suc x)} is always false and therefore the proof is as simple as refl.
+
+\begin{codesnippet}[mathescape=true, caption={Successor of $\mathbb{N}^+$}, label={codeSnippet:nonzero_natural_number_suc}]
+suc$^+$ : $\mathbb{N}^+$ $\rightarrow$ $\mathbb{N}^+$
+suc$^+$ (x, p) = (suc x, refl)
+\end{codesnippet}
+
+\subsection{Advanced Example in Agda}
 A more advanced example in agda. Such as brown tree or even parts of the huffman encoding.
