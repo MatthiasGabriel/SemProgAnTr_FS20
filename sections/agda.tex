@@ -1,7 +1,4 @@
 \section{First steps in Agda}\label{section:first_steps_in_agda}
-The idea of this chapter is to give the reader a brief overview of how Agda and external proofs, especially in Agda, work. This is helpful as a contrast to the following chapters. 
-In chapter \ref{section:internal_vs_external_verification} some differences are highlighted. The example, therefore, will most probably be based on the list to be able to compare it later with the vector type.
-
 In the following chapter, a brief introduction to Agda is given. If you are experienced in any functional programming, it will be a short read or you might even skip some parts.
 
 Agda is an advanced functional programming language. Its syntax is strongly related to Haskell but it differs concept-wise in some topics. 
@@ -17,40 +14,71 @@ Lets first look at the data type definition for Peano natural numbers $\mathbb{N
 
 As most other functional languages Agda relies heavily on pattern matching. 
 
-To define a new datatype one simply has to specify the name of the type after the keyword data. 
-Directly followed after the name the type of the new datatype is defined as Set. 
-Set is a special kind of type which is the type of types. This is required because in Agda every expression has a type. \todo{cite?}
+To define a new data type one simply has to specify the name of the type after the keyword \emph{data}. 
+Directly followed after the name the type of the new datatype is defined as \emph{Set}. 
+\emph{Set} is a special kind of type which is the type of types. This is required because in Agda every expression has a type\cite{norell:deptyped}.
 
-After this basic definition two different constructors \emph{zero} and \emph{suc} are defined. 
+After this basic definition two different constructors \emph{zero} and \emph{suc} are defined as shown in code snippet \ref{codeSnippet:natural_number}.
 There is little meaning behind this short definition other than elements constructed with these operations are of type $\mathbb{N}$.
 The only additional information is that suc requires another $\mathbb{N}$ to be constructed.
 
-\begin{codesnippet}[mathescape=true, caption={Definition of the peano natural numbers datatype in Agda}, label={codeSnippet:natural_number}]
+\begin{codesnippet}[mathescape=true, caption={Definition of the peano natural numbers data type in Agda}, label={codeSnippet:natural_number}]
 data $\mathbb{N}$: Set where
   zero : $\mathbb{N}$
-  suc : $\mathbb{N} \rightarrow \mathbb{N}$
+  suc  : $\mathbb{N} \rightarrow \mathbb{N}$
 \end{codesnippet}
 
-Elements of $\mathbb{N}$ can now be constructed by calling the constructors and used in functions with pattern matching.
+Elements of $\mathbb{N}$ can now be constructed by calling the constructors and used in functions with pattern matching. 
+Code snippet \ref{codeSnippet:natural_number_constructor} shows the basic usage of the two different constructor.
 
 \begin{codesnippet}[mathescape=true, caption={Some peano numbers}, label={codeSnippet:natural_number_constructor}]
-zero
-suc zero
-suc (suc (suc zero))
+x = zero
+y = suc zero
+z = suc (suc (suc zero))
 \end{codesnippet}
+
+Addition of Peano numbers can be defined in a very elegant way as an infix-operator as shown in code snippet \ref{codeSnippet:natural_number_addition}. These are functions which can be used in between two arguments.
+Alternativelly it is also possible to call these functions in the normal prefix notation, but in this case the underscores are mandatory.
+
+The $\text{\_+\_}$ function takes two arguments of type $\mathbb{N}$ and returns another $\mathbb{N}$. Based on the actual values of these arguments the pattern matching different values are returned.
+If the first argument is \emph{zero} the function simply returns the second argument.
+If the first argument matches the pattern suc m, where m can be of any Peano number, then the successor of m + n will be returned.
+This will result in recursive calls to the $\text{\_+\_}$  function until the first argument is zero and the base case is reached.
+
 \begin{codesnippet}[mathescape=true, caption={Peano numbers addition}, label={codeSnippet:natural_number_addition}]
-_+_ : $\mathbb{N} \rightarrow \mathbb{N}$
+_+_ : $\mathbb{N} \rightarrow \mathbb{N} \rightarrow \mathbb{N}$
 zero  + n = n
 suc m + n = suc (m + n)
 \end{codesnippet}
 
+The second basic function of Peano numbers that will be used in this publication is the comparison function, also know as $\text{\_<\_}$, shown in code snippet \ref{codeSnippet:natural_number_less_than}
+
+The type definition of the function states that it takes two arguments of $\mathbb{N}$ and returns a $\mathbb{B}$
+
+The boolean data type $\mathbb{B}$ consists of two constructors \emph{tt} - representing true - and \emph{ff} - representing false - is shown in code snippet \ref{codeSnippet:boolean} for completeness.
+
+\begin{codesnippet}[mathescape=true, caption={Definition of the boolean data type in Agda}, label={codeSnippet:boolean}]
+data $\mathbb{B}$: Set where
+  tt : $\mathbb{B}$
+  ff  : $\mathbb{B}$
+\end{codesnippet}
+
+The $\text{\_+\_}$ function follows the same structure as the $\text{\_+\_}$ function, but has more different cases. 
+This might not be the smallest possible definition for this property but it is certainly good readable.
+
+\begin{codesnippet}[mathescape=true, caption={Peano numbers less-than}, label={codeSnippet:natural_number_less_than}]
+_<_ : $\mathbb{N} \rightarrow \mathbb{N} \rightarrow \mathbb{B}$
+0 < 0 = ff
+0 < (suc y) = tt
+(suc x) < (suc y) = x < y
+(suc x) < 0 = ff
+\end{codesnippet}
 
 The definition of the list datatype as seen in code snippet \ref{codeSnippet:list_datatype} is more complex as it contains a type parameter. The application of another datatype to the list datatype results in an own unique type, this concept is called type-level function. 
 
 In this specific example, the function takes any type A at the type level $\ell$ and returns a new type, the concrete list type of A, at the same type level.\todo{research why this is required.}
 For example $\mathbb{L}$ $\mathbb{N}$ for the list of Peano numbers.
 
-\todo{maybe move this "list" block closer to dependent types to be able to compare it better.}
 It is possible to consider $\ell$ as an additional argument but with the usage of curly braces around $\ell$, we indicate that it should be inferred by Agda.
 When a parameter in a datatype definition is declared it can be used in the types of the constructors. 
 For example, the second constructor is defined as a function that takes an argument x of type A and a second argument xs of type $\mathbb{L}$ A and returns a new $\mathbb{L}$ A where A is exactly the type that was used to construct the type of the list.
@@ -66,10 +94,9 @@ To call the append function, in code snippet \ref{codeSnippet:list_append} imple
 Agda infers the correct type-level $\ell$ and the type A from the explicit arguments of type $\mathbb{L}$ A. 
 Note that both lists are required to have the same type.
 
-Due to that fact it is proven that x is of type A and xs, as well as ys, are of type $\mathbb{L}$ A and 
+Due to that fact, it is proven that x is of type A and xs, as well as ys, are of type $\mathbb{L}$ A and 
 because the second constructor of $\mathbb{L}$ is used its also proven that the return value is also $\mathbb{L}$ A.
 
-\todo{Research and explain forall}
 \begin{codesnippet}[mathescape=true, caption={Definition of the list append function in Agda}, label={codeSnippet:list_append}]
 _++_ : $\forall$ {$\ell$} {A : Set $\ell$} $\rightarrow \mathbb{L}$ A$\rightarrow \mathbb{L}$ A$\rightarrow \mathbb{L}$ A
   []        ++ ys = ys
@@ -107,19 +134,18 @@ nth (suc n) (x :: xs) = nth n xs
 \end{codesnippet}
 
 \subsection{Total languages}\label{section:total_languages}
-Placeholder: Agda and other languages based on type theory are total languages in the sense that a program e of type T will always terminate with a value in T. 
-No runtime error can occur and no nonterminating programs can be written (unless explicitly requested by the programmer)\cite{AgdaReadTheDocs}.
-
+\todo{More content}
 In comparison to other programming languages of all kind of different paradigms, Agda is a so-called total programming language \cite{AgdaReadTheDocs}.
 This means that every valid Agda programs will always terminate with the correct type. There is no exception to this.
 
 In contrast to this non-total languages often also terminate with the correct type, but they may also not terminate or raise an exception because something was not as expected and the behaviour for this special case was not defined.
 
-Normal Agda programs will not compile if there is an incomplete definition such as a side case that is not covered.
+Normal Agda programs will not compile if there is an incomplete definition detected, such as a possible case that is not covered.
 
 For some programs, the check for termination can be done automatically, but sometimes Agda needs some "hints" from the developer to be able to prove the termination of the corresponding program.
 
 \subsection{Proofs in the program}\label{section:agda_proofs}
+\todo{Maybe move this (or parts of it), as in some proofs such as x+0 dependent function types are used before they are introduced.}
 In this section a small introduction to \emph{Propositions as Types}\cite{10.1145/2699407} will be given together with a few example in Agda. \emph{Proposition as Types} is also known under the names \emph{Curry-Howard Correspondence}\cite{10.5555/1076265} and \emph{Curry-Howard Isomorphism}\cite{10.1145/2841316} and many more.
 
 Under all this different names the same interlinking between logic and programming is understood. There are three main statements of interest, pointed out by Wadler in \cite{10.1145/2699407}.
@@ -150,7 +176,7 @@ $$\text{0+1=1} = refl$$
 If this program compiles successfully, the proof is completed.
 
 This proof is just proven for these specific values, similiar to a single test case. But it is possible to extend this proof to any Peano number $\mathbb{N}$. 
-To do this we use the universal quantifier $\forall$, which is also common in mathematics, to state that the following property should hold for every possible assignment.
+To do this we use the universal quantifier $\forall$, which is also common in mathematics, to state that the following property should hold for every possible assignment\cite{plfa2019}.
 The $\forall$ symbol is a reserved keyword in Agda.
 
 The new proposition in code snippet \ref{codeSnippet:zero_plus_x_agda} is now a little more complex but still comprehensible. It states that for every x of type $\mathbb{N}$ the following equivalence holds. 
@@ -186,6 +212,3 @@ x+0 suc(a) rewrite x+0 a = refl
 
 This kind of proof is called proof by induction in mathematics and is actually very common.
 The important thing to remember, as in every recursion, is that a base case as well as partial solution step are required.
-
-\todo{cite \cite{norell:deptyped, 10.1145/2841316, plfa2019}}
-

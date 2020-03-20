@@ -1,10 +1,5 @@
 \section{Dependent Types}
 \subsection{Introduction to dependent types}
-An introduction to dependent types in theory. Similar to Chapter 5.1 of \cite{10.1145/2841316}, but my objective is to be a little bit more general.
-\todo{similar to the introduction example}
-\todo{theory? maybe it is more clever to explain the theory after the example.}
-The primary objective is to present the basics of the feature and its fundamental promises.
-
 There are different kinds of dependent types. The two most common ones are $\Sigma$-types and $\Pi$-types.
 Let us first focus on the $\Pi$-types, which are also used in our first example in section \ref{section_dependent_types_example}. These types are sometimes also called \emph{dependent function types} as in \cite{10.1145/2841316} or \emph{dependent product type} as in \cite{10.5555/1076265}. Be aware that the name dependent product type can also be used for $\Sigma$-types as in \cite{10.1145/2841316}.
 
@@ -89,11 +84,12 @@ The proof and the tail of the list are not used, and therefore replaced by an \_
 
 At line 4 the recursive case is defined which calls \emph{nth$\mathbb{V}$} again but with the predecessor of n and the tail of the current vector.
 The proof p is directly passed into the new function call. At first glance, this might look a little bit unusual, but because, both the index as well as the length of the new vector - in the recursion case xs - 
-are decreased by exactly one, the proof still holds, as suc n < suc m $\equiv$ tt and n $<$ m $\equiv$ tt are definitionally equal. \todo{explain definitially equal.}\todo{explain "proof"}\todo{research and explain how the first proof gets created.}
+are decreased by exactly one, the proof still holds, as suc n $<$ suc m $\equiv$ tt and n $<$ m $\equiv$ tt are definitionally equal.
 
 Let us focus on the last two lines which look quite different than any of the definitions we saw.
 Because it is not possible to prove that suc n $<$ m where m is the length of the empty list, or more concretely zero, the so-called absurd pattern can be used. This basically tells Agda that this case can never be reached and therefore no definition for this case has to exist.
-Because of the definition of \_$<$\_ of $\mathbb{N}$ on the last line is required too which proves that zero $<$ zero $\equiv$ tt is false as well. \todo{explain absurd pattern} \todo{maybe explain more why this different cases are required.}
+The reason why the last line is required too lies in the definition of \_$<$\_ of $\mathbb{N}$ shown in code snippet \ref{codeSnippet:natural_number_less_than}.
+Because in this definition a case distinction between $0 < 0$ and $\text{(suc x)} < 0$ was made, the last line, which proves that zero $<$ zero $\equiv$ tt is false, is required as well.
 
 \begin{codesnippet}[mathescape=true, caption={Definition of \emph{nth} function in Agda}, label={codeSnippet:vector_nth}]
 nth$\mathbb{V}$ : $\forall$ {$\ell$} {A : Set $\ell$} {m : $\mathbb{N}$} $\rightarrow$
