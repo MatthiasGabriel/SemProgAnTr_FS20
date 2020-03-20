@@ -119,8 +119,73 @@ Normal Agda programs will not compile if there is an incomplete definition such 
 
 For some programs, the check for termination can be done automatically, but sometimes Agda needs some "hints" from the developer to be able to prove the termination of the corresponding program.
 
-\subsection{Proofs in the program}
-Placeholder: Introduction to proofs (external verification) in agda with a few examples.
-Curry-Howard isomorphism.
-\cite{norell:deptyped, 10.1145/2841316, plfa2019}
+\subsection{Proofs in the program}\label{section:agda_proofs}
+In this section a small introduction to \emph{Propositions as Types}\cite{10.1145/2699407} will be given together with a few example in Agda. \emph{Proposition as Types} is also known under the names \emph{Curry-Howard Correspondence}\cite{10.5555/1076265} and \emph{Curry-Howard Isomorphism}\cite{10.1145/2841316} and many more.
+
+Under all this different names the same interlinking between logic and programming is understood. There are three main statements of interest, pointed out by Wadler in \cite{10.1145/2699407}.
+
+\emph{Propositions as types} states that each proposition in a logic has a corresponding type in the programming world and the other way around. 
+
+\emph{Proofs as programs} follows from the fact that each proof is mapped to its proposition, as well as each program has its own type.
+
+\emph{Simplification of proofs as evaluation of programs} states that for every step in simplification of a proof there is an operation how to evaluate the corresponding program.
+
+This basically allows it that proofs can be directly represented in some programming languages.
+
+Let us now consider a first small example in Agda.
+In Agda it is possbile to define propositional equalities such as $zero + suc(zero) \equiv suc(zero)$. The type of this term is Set which is the type of types. This was the first application of propositions as types.
+However this proposition is not proved yet. It is also possible to state false propositions such as $zero + suc(zero) \equiv zero$ without any compiler errors.
+
+To prove this proposition a program of the type $zero + suc(zero) \equiv suc(zero)$ has to be implemented.
+As a start a useful name has to be considered. Note that you are not very free in terms of naming and even can use operators used to define names, as it will only be treated as separate symbol with spaces around it. Possible names are $1+0=1$ or $zeroAddition$ and many more. 
+If you are coding in a team please make sure to define naming guidelines because it can be quite confusing to use the same operators in the name as in type description.
+
+$$\text{0+1=1} : zero + suc(zero) \equiv suc(zero)$$
+
+It is possible for Agda to simplify this type to $suc(zero) \equiv suc(zero)$ because $suc(zero) + zero$ is definitionally equal to $suc(zero)$ . Where definitionally equal means that Agda is able to simplify both terms to the same value and they are therefore interchangable.
+The proof is now simply as both sides are equal as well. Agda just needs this hint by assigning the value $refl$ to it which means reflexivity and requires both sides of the $\equiv$ operator to be definitionally equal.
+
+$$\text{0+1=1} = refl$$
+
+If this program compiles successfully, the proof is completed.
+
+This proof is just proven for these specific values, similiar to a single test case. But it is possible to extend this proof to any Peano number $\mathbb{N}$. 
+To do this we use the universal quantifier $\forall$, which is also common in mathematics, to state that the following property should hold for every possible assignment.
+The $\forall$ symbol is a reserved keyword in Agda.
+
+The new proposition in code snippet \ref{codeSnippet:zero_plus_x_agda} is now a little more complex but still comprehensible. It states that for every x of type $\mathbb{N}$ the following equivalence holds. 
+Because an variable \emph{x} is defined in the type, the program requires an input argument. In this code snippet this argument gets assigned to the variable \emph{a}.
+
+As the first constructor of the addition of $\mathbb{N}$ is $zero + n = n$ refl is the proof.
+
+\begin{codesnippet}[mathescape=true, caption={Proof of addition to zero in Agda}, label={codeSnippet:zero_plus_x_agda}]
+0+x : $\forall$ (x : $\mathbb{N}$) $\rightarrow$ zero + x $\equiv$ x
+0+x a = refl
+\end{codesnippet}
+
+If the addition happens in a different order and \emph{zero} gets added to \emph{x}, as shown in code snippet \ref{codeSnippet:x_plus_zero_agda}, the proof gets yet a little bit more complicated. 
+The reason for this lies in the definition of addition.
+Because on the recursion happens on the second argument it is no longer possible for Agda to determine that these terms are definitionally equal and requires the programmer to add additional hints to be able to prove this indeed.
+
+It is notable that it is possible to pattern match in proofs as they are just normal programms. 
+For the base case \emph{zero + zero $\equiv$ zero}, \emph{refl} is still enough but on the case where \emph{a} is not \emph{zero} but \emph{suc(x)} the \emph{rewrite} directive is required.
+
+The \emph{rewrite} directive can be used to transform parts of the original problem. If a proof exists that A $\equiv$ B then rewrite will replace A with B in the instantiated type.
+
+But how does this really work?
+The original proof we tried to archive is $x + zero \equiv x$ where x is instantiated with \emph{suc(a)} or more precisely $suc(a) + zero \equiv suc(a)$
+As $suc(a) + zero$ is definitionally equal to $suc(a + zero)$ regarding the second constructor of addition in code snippet \ref{codeSnippet:natural_number_addition}, this can also be written as $suc(a + zero) \equiv suc(a)$.
+
+If now the proof that $a + 0 \equiv a$ gets applied to this the result will be the desired $suc(a) \equiv suc(a)$. The proof $a + 0 \equiv a$ gets archived by calling the proof recursively on $a$ instead of $suc(a)$
+
+\begin{codesnippet}[mathescape=true, caption={Proof of addition to zero in Agda}, label={codeSnippet:x_plus_zero_agda}]
+x+0 : $\forall$ (x : $\mathbb{N}$) $\rightarrow$ x + zero $\equiv$ x
+x+0 zero = refl
+x+0 suc(a) rewrite x+0 a = refl
+\end{codesnippet}
+
+This kind of proof is called proof by induction in mathematics and is actually very common.
+The important thing to remember, as in every recursion, is that a base case as well as partial solution step are required.
+
+\todo{cite \cite{norell:deptyped, 10.1145/2841316, plfa2019}}
 
