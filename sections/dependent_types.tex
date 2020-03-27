@@ -42,6 +42,9 @@ In this chapter, the first dependent data type in Agda the vector will be define
 It is essentially a list but in contrast to the list data type defined in chapter \ref{section:agda_introduction_example} the length of the list is a part of the type.
 
 In addition to the implicit type-level and the type A, an additional parameter of type $\mathbb{N}$ is defined in the type definition as shown in code snippet \ref{codeSnippet:vector_data type}.
+There is a difference between \emph{parameters}, used before the colon, and \emph{indices} of a datatype.The datatype $\mathbb{V}$ is parameterised by a type A and indexed over $\mathbb{N}$\cite{norell:deptyped}.
+Parameters are required to be exactly the same for each constructor of a datatype, however, indicies can vary.
+
 The first constructor for the empty vector sets the length of the vector to the fixed value zero of $\mathbb{N}$ because it is known that the list is currently empty and the length is therefore 0.
 The second constructor is used to add new elements to an existing vector. It takes two arguments one of type A and one of type $\mathbb{V}$ A n similar to the list but additionally it determines the implicit argument n of type $\mathbb{N}$ from the input vector.
 This parameter is then used to define the return type. As exactly one new element is added to the existing list of type $\mathbb{V}$ A n it is known that the new type has to be $\mathbb{V}$ A (suc n).
@@ -75,9 +78,22 @@ The next example will present the first benefit of including the length in the d
 In case of the list data type $\mathbb{L}$, it was required to define an additional helper data type maybe as described in chapter \ref{section:agda_introduction_example} when implementing the \emph{nth} function.
 Additionally, whenever a programmer uses the function, he has to think of this different cases nothing or just and adjust his functionality - normally with additional pattern matching.
 
-The corresponding function \emph{nth$\mathbb{V}$} has an additional implicit parameter m of type $\mathbb{N}$ which represents the length of the input vector. 
-The second explicit parameter is a proof that n is less than m. 
-The function returns always an A instead of a maybe A as it was before.
+The same restrictions are met by the \emph{head} function of a $\mathbb{L}$. 
+However, the \emph{head} function of $\mathbb{V}$ shown in code snippet \ref{codeSnippet:vector_head} always returns a single object of type A.
+This is possible by using the additional information of the implicit parameter \emph{n} of type $\mathbb{N}$, respectivelly by restricting the input vector to the type $\mathbb{V}$ A suc(n).
+Elements of this type are known to have a least one entry, in this case the implicit parameter would be zero.
+
+It is possible to define the \emph{head} without specificing a pattern for the empty vector [] as the type checker can infer that this case is not possible.
+Whenever a particular case is type correct it is necessary to include it, otherwise it needs to be omitted \cite{norell:deptyped}.
+\begin{codesnippet}[mathescape=true, caption={Definition of \emph{head} function in Agda}, label={codeSnippet:vector_head}]
+head$\mathbb{V}$ : $\forall$ {$\ell$} {A : Set $\ell$} {n : $\mathbb{N}$} $\rightarrow$ 
+        $\mathbb{V}$ A suc(n) $\rightarrow$ A
+head$\mathbb{V}$ (x :: _) = x
+\end{codesnippet}
+
+One step further the function \emph{nth$\mathbb{V}$} also has an additional implicit parameter m of type $\mathbb{N}$ which represents the length of the input vector. 
+The second explicit parameter is a proof that n is less than m.
+In contrast to the function \emph{nth} this function returns always an A instead of a maybe A as it was before.
 
 Let us have a little bit closer look at this whole function in code snippet \ref{codeSnippet:vector_nth} starting with line 3. It states that if the element at index 0 is wanted, the head of the list is returned.
 The proof and the tail of the list are not used, and therefore replaced by an \_. This is the base case.
