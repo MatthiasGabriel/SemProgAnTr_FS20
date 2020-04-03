@@ -1,6 +1,7 @@
 \section{First steps in Agda}\label{section:first_steps_in_agda}
 In the following chapter, a brief introduction to Agda is given. If you are experienced in any functional programming, it will be a short read or you might even skip some parts.
 
+\subsection{Preliminaries}
 Agda is an advanced functional programming language. Its syntax is strongly related to Haskell but it differs concept-wise in some topics. 
 
 One thing to mention is that Agda supports the full Unicode characters in the source code with only a few reserved symbols\footnote{\, . ; \{ \} ( ) @ " are reserved symbols\cite{AgdaReadTheDocsStructure}} 
@@ -9,27 +10,28 @@ Unicode symbols will be used a lot, especially for mathematical symbols.
 
 Another important thing to mention is the integration into emacs, which works as an IDE and supports syntax highlighting as well as many agda specific features some of which are pointed out in this publication.
 
-\subsection{Introduction example}\label{section:agda_introduction_example}
-Lets first look at the data type definition for Peano natural numbers $\mathbb{N}$ shown in code snippet \ref{codeSnippet:natural_number}.
+\subsection{Introductory example}\label{section:agda_introduction_example}
+\subsubsection{Datatype Definitions}
+Lets first look at the datatype definition for Peano natural numbers $\mathbb{N}$ shown in code snippet \ref{codeSnippet:natural_number}.
 
-As most other functional languages Agda relies heavily on pattern matching. 
-
-To define a new data type one simply has to specify the name of the type after the keyword \emph{data}. 
-Directly followed after the name the type of the new datatype is defined as \emph{Set}. 
-\emph{Set} is a special kind of type which is the type of types. This is required because in Agda every expression has a type\cite{norell:deptyped}.
-
-After this basic definition two different constructors \emph{zero} and \emph{suc} are defined as shown in code snippet \ref{codeSnippet:natural_number}.
-There is little meaning behind this short definition other than elements constructed with these operations are of type $\mathbb{N}$.
-The only additional information is that suc requires another $\mathbb{N}$ to be constructed.
-
-\begin{codesnippet}[mathescape=true, caption={Definition of the peano natural numbers data type in Agda}, label={codeSnippet:natural_number}]
+\begin{codesnippet}[mathescape=true, caption={Definition of the peano natural numbers datatype in Agda}, label={codeSnippet:natural_number}]
 data $\mathbb{N}$: Set where
   zero : $\mathbb{N}$
   suc  : $\mathbb{N} \rightarrow \mathbb{N}$
 \end{codesnippet}
 
+\todo{Add reference to explanation of set and $\ell$}
+To define a new datatype it is required to specify the name of the type after the keyword \emph{data}.
+Separated by a colon the type of the new datatype is defined - normally this is \emph{Set}.
+\emph{Set} is a special kind of type which is the type of types.
+It is required to specify the type of this new datatype because in Agda every expression has a type \cite{norell:deptyped}.
+
+After this basic definition two different constructors \emph{zero} and \emph{suc} are defined as shown in code snippet \ref{codeSnippet:natural_number}.
+There is little meaning in this short definition other than elements constructed with these operations are of type $\mathbb{N}$.
+The only additional information is that \emph{suc} requires another $\mathbb{N}$ to be constructed.
+
 Elements of $\mathbb{N}$ can now be constructed by calling the constructors and used in functions with pattern matching. 
-Code snippet \ref{codeSnippet:natural_number_constructor} shows the basic usage of the two different constructor.
+Code snippet \ref{codeSnippet:natural_number_constructor} shows the basic usage of the two different constructors.
 
 \begin{codesnippet}[mathescape=true, caption={Some peano numbers}, label={codeSnippet:natural_number_constructor}]
 x = zero
@@ -37,13 +39,20 @@ y = suc zero
 z = suc (suc (suc zero))
 \end{codesnippet}
 
+\subsubsection{Mixfix Operators}
 Addition of Peano numbers can be defined in a very elegant way as an infix operator as shown in code snippet \ref{codeSnippet:natural_number_addition}.
-These are functions which can be used in between its arguments.
-Alternativelly it is also possible to call these functions in the normal prefix notation, but in this case the underscores are mandatory.
-The underscores determine the place of its arguments.
-Note that these operators are not restricted to two arguments, but allow more complex constructs such as $\text{if\_then\_else\_}$.
 
-In case of the $\text{\_+\_}$ the infix call is $n + m$ and the equivalent prefix call is $\text{\_+\_} n m$
+\begin{codesnippet}[mathescape=true, caption={Peano numbers addition}, label={codeSnippet:natural_number_addition}]
+_+_ : $\mathbb{N} \rightarrow \mathbb{N} \rightarrow \mathbb{N}$
+zero  + n = n
+suc m + n = suc (m + n)
+\end{codesnippet}
+
+Infix operators are functions which can be used in between its arguments in which the underscores determines the place of its arguments.
+Alternativelly it is also possible to call these functions in the normal prefix notation, but in this case the underscores are mandatory\footnote{In case of the \_+\_ the infix call is $n + m$ and the equivalent prefix call is $\text{\_+\_} n m$}.
+
+Infix operators are a special case of mixfix operators where the operator is in between the arguments.
+However, mixfix operators are not restricted to two arguments, but allow more complex constructs such as $\text{if\_then\_else\_}$ \cite{AgdaReadTheDocs}.
 
 To be able to use multiple infix operators in the same expression it is necessary to specify the precedence of these.
 With the three different keywords \emph{infix}, \emph{infixr} and \emph{infixl} the precedence as well as the associativity of the operator can be defined\footnote{The precendence factor defaults to 20 and can also be negative.}.
@@ -53,32 +62,7 @@ infixl 40 _+_
 infixl 20 _<_
 \end{codesnippet}
 
-The $\text{\_+\_}$ function takes two arguments of type $\mathbb{N}$ and returns another $\mathbb{N}$.
-Based on the actual values of these arguments the pattern matching different values are returned.
-If the first argument is \emph{zero} the function simply returns the second argument.
-If the first argument matches the pattern suc m, where m can be of any Peano number, then the successor of m + n will be returned.
-This will result in recursive calls to the $\text{\_+\_}$  function until the first argument is zero and the base case is reached.
-
-\begin{codesnippet}[mathescape=true, caption={Peano numbers addition}, label={codeSnippet:natural_number_addition}]
-_+_ : $\mathbb{N} \rightarrow \mathbb{N} \rightarrow \mathbb{N}$
-zero  + n = n
-suc m + n = suc (m + n)
-\end{codesnippet}
-
-The second basic function of Peano numbers that will be used in this publication is the comparison function, also know as $\text{\_<\_}$, shown in code snippet \ref{codeSnippet:natural_number_less_than}
-
-The type definition of the function states that it takes two arguments of $\mathbb{N}$ and returns a $\mathbb{B}$
-
-The boolean data type $\mathbb{B}$ consists of two constructors \emph{tt} - representing true - and \emph{ff} - representing false - is shown in code snippet \ref{codeSnippet:boolean} for completeness.
-
-\begin{codesnippet}[mathescape=true, caption={Definition of the boolean data type in Agda}, label={codeSnippet:boolean}]
-data $\mathbb{B}$: Set where
-  tt : $\mathbb{B}$
-  ff  : $\mathbb{B}$
-\end{codesnippet}
-
-The $\text{\_+\_}$ function follows the same structure as the $\text{\_+\_}$ function, but has more different cases. 
-This might not be the smallest possible definition for this property but it is certainly good readable.
+An additional function for Peano numbers which is used in this publication is the comparison function shown in code snippet \ref{codeSnippet:natural_number_less_than}.
 
 \begin{codesnippet}[mathescape=true, caption={Peano numbers less-than}, label={codeSnippet:natural_number_less_than}]
 _<_ : $\mathbb{N} \rightarrow \mathbb{N} \rightarrow \mathbb{B}$
@@ -87,33 +71,45 @@ _<_ : $\mathbb{N} \rightarrow \mathbb{N} \rightarrow \mathbb{B}$
 (suc x) < (suc y) = x < y
 (suc x) < 0 = ff
 \end{codesnippet}
+
+The \_\textless\_ function follows the same structure as the \_+\_ function, but includes four different pattern matching cases. 
+This might not be the smallest possible definition possible but it is very precise and comprehensible.
+
+\todo{Maybe replace tt with true and ff with false which in my opinion is nicer}
+The boolean datatype $\mathbb{B}$ consists of two constructors \emph{tt} (representing true) and \emph{ff} (representing false) is shown in code snippet \ref{codeSnippet:boolean} for completeness.
+
+\begin{codesnippet}[mathescape=true, caption={Definition of the boolean datatype in Agda}, label={codeSnippet:boolean}]
+data $\mathbb{B}$: Set where
+  tt : $\mathbb{B}$
+  ff  : $\mathbb{B}$
+\end{codesnippet}
+
+\subsubsection{Type Parameters}
+The definition of the list datatype as seen in code snippet \ref{codeSnippet:list_datatype} is more complex than the previous datatype definitions of $\mathbb{B}$ and $\mathbb{N}$ as it contains a type parameter.
+The application of another type to the list datatype results in an own unique type, this concept is called type-level function.
+
 \todo{Verify that this is a type-level function}
-The definition of the list datatype as seen in code snippet \ref{codeSnippet:list_datatype} is more complex as it contains a type parameter.
-The application of another datatype to the list datatype results in an own unique type, this concept is called type-level function.
 
-In this specific example, the function takes any type A at the type level $\ell$ and returns a new type, the concrete list type of A, at the same type level.\todo{research why this is required.}
-For example $\mathbb{L}$ $\mathbb{N}$ for the list of Peano numbers.
-
-$\ell$ is just an additional argument but with the usage of curly braces around $\ell$, we indicate that it is implicit and therefore should be inferred by Agda.
-There is no guarantee that the type checker is able to infer implicit arguments and it fails otherwise.
-But it is always possible to specificy the implicit arguments in the call by enclosing the argument in curly braces\cite{norell:deptyped}.
-
-When a parameter in a datatype definition is declared it can be used in the types of the constructors. 
-For example, the second constructor is defined as a function that takes an argument x of type A and a second argument xs of type $\mathbb{L}$ A and returns a new $\mathbb{L}$ A where A is exactly the type that was used to construct the type of the list.
 \begin{codesnippet}[mathescape=true, caption={Definition of the list datatype in Agda}, label={codeSnippet:list_datatype}]
 data $\mathbb{L}$ {$\ell$} (A : Set $\ell$) : Set $\ell$ where
   [] : $\mathbb{L}$ A
   _::_ : (x : A) (xs: $\mathbb{L}$ A) $\rightarrow \mathbb{L}$ A
 \end{codesnippet}
 
-With the help of the two constructors, it is possible to construct any possible list. As the next step the function which appends two lists of the same type. In combination with the examples in chapter \ref{section:dependent_types}, this will help to understand the difference between generic types and dependent types.
+\todo{Explain $\ell$}
+In this specific example, the function takes any type A at the type level $\ell$ and returns a new type, the concrete list type of A, at the same type level.\todo{research why this is required.}
+For example $\mathbb{L}$ $\mathbb{N}$ for the list of Peano numbers.
 
-To call the append function, in code snippet \ref{codeSnippet:list_append} implemented as the ++ operator, two implicit and two explicit arguments are required. 
-Agda infers the correct type-level $\ell$ and the type A from the explicit arguments of type $\mathbb{L}$ A. 
-Note that both lists are required to have the same type.
+$\ell$ is just an additional argument but with the usage of curly braces around $\ell$, it is indicated that it is an implicit argument and should be inferred by Agda.
+There is no guarantee that the type checker is able to infer implicit arguments and it fails otherwise.
+But it is always possible to specificy the implicit arguments in the call by enclosing the argument in curly braces\cite{norell:deptyped}.
 
-Due to that fact, it is proven that x is of type A and xs, as well as ys, are of type $\mathbb{L}$ A and 
-because the second constructor of $\mathbb{L}$ is used its also proven that the return value is also $\mathbb{L}$ A.
+When a parameter in a datatype definition is declared it can be used in the types of the constructors. 
+For example, the second constructor is defined as a function that takes an argument x of type A and a second argument xs of type $\mathbb{L}$ A and returns a new $\mathbb{L}$ A where A is exactly the type that was used to construct the type of the list.
+
+With the help of the two constructors, it is possible to construct any possible list. 
+The next function to consider is $\_++\_$ which appends two lists of the same type show in code snippet \ref{codeSnippet:list_append}. 
+In combination with the examples in chapter \ref{section:dependent_types}, this will help to understand the difference between generic types and dependent types.
 
 \begin{codesnippet}[mathescape=true, caption={Definition of the list append function in Agda}, label={codeSnippet:list_append}]
 _++_ : $\forall$ {$\ell$} {A : Set $\ell$} $\rightarrow \mathbb{L}$ A$\rightarrow \mathbb{L}$ A$\rightarrow \mathbb{L}$ A
@@ -121,16 +117,20 @@ _++_ : $\forall$ {$\ell$} {A : Set $\ell$} $\rightarrow \mathbb{L}$ A$\rightarro
   (x :: xs) ++ ys = x :: (xs ++ ys)
 \end{codesnippet}
 
-The second function for lists that is of interest in this topic is \emph{nth}.
-It is the function which returns the nth element of an existing list.
+To call this function two implicit and two explicit arguments are required. 
+Agda infers the correct type-level $\ell$ and the type A from the explicit arguments of type $\mathbb{L}$ A. 
+It is required that both lists are of the same type. 
+Because both input lists are of type $\mathbb{L}$ A it is possible to infer that the return value is also of type $\mathbb{L}$ A.
 
-One problem that has to be solved is when there are not enough elements in the list to return the nth element. 
-In common programming languages, this results in an exception which is not possible in Agda.
-More details on this can be found in the following chapter \ref{section:total_languages}.
+The second function for lists that is of interest is \emph{nth} which returns the nth element of an existing list.
+In particular the comparison with the same function for vectors, which is shown in chapter \ref{section_dependent_types_example}, can help to understand dependent types.
 
-To overcome this, an additional data type \emph{maybe} - in other languages such as Java called Optional - is introduced.
+One fundamental problem that the access to the specific element at position n has, is that the list might not be long enough.
+In many common programming languages, this results in an exception. The concept of exceptions is, however, not included in Agda to maintain the properties of a total language.
+A more detailed explanation can be found in section \ref{section:total_languages}.
 
-This data type is essentially either a wrapper around another element or a placeholder for a not existing element.
+To overcome this issue, an additional datatype \emph{maybe} is introduced\footnote{In other languages such as Java the concept of the \emph{maybe} datatype is known as \emph{Optional}}.
+This datatype is either a wrapper around another element or indicates the absence of it.
 
 \begin{codesnippet}[mathescape=true, caption={Definition of the maybe datatype in Agda}, label={codeSnippet:maybe_datatype}]
 data maybe {$\ell$} (A : Set $\ell$) : Set $\ell$ where
@@ -140,10 +140,6 @@ data maybe {$\ell$} (A : Set $\ell$) : Set $\ell$ where
 
 The function \emph{nth} as shown in code snippet \ref{codeSnippet:list_nth} takes two implicit arguments for the type level and the type A itself.
 
-In addition to the implicit arguments, an element of type $\mathbb{N}$, namely the index of the required element, as well as the list itself, have to be specified.
-If the function is called with an empty list, either directly or in the recursion it will return the element nothing of type maybe indicating that no element was found at this position.
-
-This solves the problem for the function nth but everywhere where the nth function is used a case distinction is required to handle this potential outcome.
 \begin{codesnippet}[mathescape=true, caption={Definition of nth function in Agda}, label={codeSnippet:list_nth}]
 nth : $\forall$ {$\ell$} {A : Set $\ell$} $\rightarrow \mathbb{N}$ $\rightarrow \mathbb{L}$ A $\rightarrow$ maybe A
 nth _ [] = nothing
@@ -151,22 +147,38 @@ nth 0 (x :: xs) = just x
 nth (suc n) (x :: xs) = nth n xs
 \end{codesnippet}
 
+In addition to the implicit arguments, an element of type $\mathbb{N}$, the index of the desired element, as well as the list itself, have to be specified.
+
+The \emph{maybe} datatype solves the issue for the function \emph{nth} but wherever the nth function is used a case distinction is required to handle the nothing case.
+
 \subsection{Total languages}\label{section:total_languages}
 \todo{More content}
-In comparison to other programming languages of all kind of different paradigms, Agda is a so-called total programming language \cite{AgdaReadTheDocs}.
+In comparison to other programming language, Agda is a so-called total programming language \cite{AgdaReadTheDocs}.
 This means that every valid Agda programs will always terminate with the correct type. There is no exception to this.
 
-In contrast to this non-total languages often also terminate with the correct type, but they may also not terminate or raise an exception because something was not as expected and the behaviour for this special case was not defined.
+It is fundamental for Agda to be total because computations can be already required during type checking.
+If non-terminating computations were possible, typechecking itself would be undecidable\cite{agda_wiki_totality}.
 
-Normal Agda programs will not compile if there is an incomplete definition detected, such as a possible case that is not covered.
+To ensure the totality of a program beside type checking, coverage checking as well as termiantion checking are of great importance. 
+Additionally \emph{strict positivity of constructors} as well as \emph{guardedness in coinductive programs} have to be checked, which are not discussed further in this publication.
 
-For some programs, the check for termination can be done automatically, but sometimes Agda needs some "hints" from the developer to be able to prove the termination of the corresponding program.
+Coverage checking verifies that no partial function is defined. A partial function is a function with pattern matching that does not cover all cases.
+As oppossed to Haskell where partial functions are compiled successfully and only throw an exception when a not covered case is required at runtime, Agda does not compile partial functions.
 
-To guarantee the termination of recursive definitions as seen in many defintions such as the addition of Peano Number in code snippet \ref{codeSnippet:natural_number_addition}, 
-the arguments used in the recusive call have to be structurally smaller \cite{norell:deptyped}. 
-This is the case as the $n$ is structurally smaller than $suc n$ based on the definitions of the $\mathbb{N}$ data type.
+To be able to check a program for termination Agda accepts only two different recursive schemas which can be proven to terminate.
 
-\subsection{Proofs in the program}\label{section:agda_proofs}
+In the case of \emph{primitive recursion} the recursive call must be executed with an argument that is exactly one constructor smaller than in the original call.
+
+For example in the addition of Peano Number in code snippet \ref{codeSnippet:natural_number_addition} the arguments used in the recusive call have to be structurally smaller \cite{norell:deptyped}. 
+This is the case as $m$ is structurally smaller than \emph{suc m} based on the definitions of the $\mathbb{N}$ datatype.
+
+Beside \emph{primitive recursion} Agda is able to determine termination on \emph{structural recursion}.
+This requires the argument of the recursive call to be a subexpression of the original argument.
+As a contrast to \emph{primitive recursion} a recusive call with $m$ is also possible if the original argument was \emph{suc(suc m)}.
+
+In contrast to this, non-total languages often also terminate with the correct type, but they may also not terminate or raise an exception because something was not as expected and the behaviour for this special case was not defined.
+
+\subsection{Proofs as programs}\label{section:agda_proofs}
 \todo{Maybe move this (or parts of it), as in some proofs such as x+0 dependent function types are used before they are introduced.}
 In this section a small introduction to \emph{Propositions as Types}\cite{10.1145/2699407} will be given together with a few example in Agda. \emph{Proposition as Types} is also known under the names \emph{Curry-Howard Correspondence}\cite{10.5555/1076265} and \emph{Curry-Howard Isomorphism}\cite{10.1145/2841316} and many more.
 
@@ -178,59 +190,61 @@ Under all this different names the same interlinking between logic and programmi
 
 \emph{Simplification of proofs as evaluation of programs} states that for every step in simplification of a proof there is an operation how to evaluate the corresponding program.
 
-This basically allows it that proofs can be directly represented in some programming languages.
+This allows it that proofs can be directly represented in the programming language.
 
-Let us now consider a first small example in Agda.
-In Agda it is possbile to define propositional equalities such as $zero + suc(zero) \equiv suc(zero)$. The type of this term is Set which is the type of types. This was the first application of propositions as types.
+\subsubsection{Proofs as programs in Agda}
+Lets now consider a first small example in Agda.
+In Agda it is possbile to define propositional equalities such as $zero + suc(zero) \equiv suc(zero)$. The type of this term is \emph{Set} which is the type of types. This was the first application of propositions as types.
 However this proposition is not proved yet. It is also possible to state false propositions such as $zero + suc(zero) \equiv zero$ without any compiler errors.
 
 To prove this proposition a program of the type $zero + suc(zero) \equiv suc(zero)$ has to be implemented.
-As a start a useful name has to be considered. Note that you are not very free in terms of naming and even can use operators used to define names, as it will only be treated as separate symbol with spaces around it. Possible names are $1+0=1$ or $zeroAddition$ and many more. 
-If you are coding in a team please make sure to define naming guidelines because it can be quite confusing to use the same operators in the name as in type description.
+As a start a useful name has to be considered. Agda is very liberal in terms of naming and even the previously defined operators can be used to define names. Possible examples for name of the proof include $\text{1+0=1}$ or $zeroAddition$.
 
 $$\text{0+1=1} : zero + suc(zero) \equiv suc(zero)$$
 
-It is possible for Agda to simplify this type to $suc(zero) \equiv suc(zero)$ because $suc(zero) + zero$ is definitionally equal to $suc(zero)$ . Where definitionally equal means that Agda is able to simplify both terms to the same value and they are therefore interchangable.
-The proof is now simply as both sides are equal as well. Agda just needs this hint by assigning the value $refl$ to it which means reflexivity and requires both sides of the $\equiv$ operator to be definitionally equal.
+Agda is able to simplify this type to $suc(zero) \equiv suc(zero)$ because $suc(zero) + zero$ is definitionally equal to $suc(zero)$. Definitionally equal means that Agda is able to simplify both terms to the same value and they are therefore interchangable.
+The proof is simple as both sides are equal. 
+Agda needs the hint by using the value $refl$, which means reflexivity and requires both sides of the $\equiv$ operator to be definitionally equal.
 
 $$\text{0+1=1} = refl$$
 
-If this program compiles successfully, the proof is completed.
+If the program gets typechecked successfully, the proof is completed.
 
-This proof is just proven for these specific values, similiar to a single test case. But it is possible to extend this proof to any Peano number $\mathbb{N}$. 
-To do this we use the universal quantifier $\forall$, which is also common in mathematics, to state that the following property should hold for every possible assignment\cite{plfa2019}.
-The $\forall$ symbol is a reserved keyword in Agda.
+This proof is very specific to these values, similiar to a single test case. But it is possible to extend this proof to any Peano number $\mathbb{N}$. 
+To do this the universal quantifier $\forall$, which is also common in mathematics, is used. It allows it to state that the following property should hold for every possible assignment\cite{plfa2019}.
+The $\forall$ symbol is one of the few reserved keywords in Agda.
 
 The new proposition in code snippet \ref{codeSnippet:zero_plus_x_agda} is now a little more complex but still comprehensible. It states that for every x of type $\mathbb{N}$ the following equivalence holds. 
 Because an variable \emph{x} is defined in the type, the program requires an input argument. In this code snippet this argument gets assigned to the variable \emph{a}.
-
-As the first constructor of the addition of $\mathbb{N}$ is $zero + n = n$ refl is the proof.
 
 \begin{codesnippet}[mathescape=true, caption={Proof of addition to zero in Agda}, label={codeSnippet:zero_plus_x_agda}]
 0+x : $\forall$ (x : $\mathbb{N}$) $\rightarrow$ zero + x $\equiv$ x
 0+x a = refl
 \end{codesnippet}
 
+As the first constructor of the addition of $\mathbb{N}$ is $zero + n = n$ refl is the proof.
+
 If the addition happens in a different order and \emph{zero} gets added to \emph{x}, as shown in code snippet \ref{codeSnippet:x_plus_zero_agda}, the proof gets yet a little bit more complicated. 
 The reason for this lies in the definition of addition.
-Because on the recursion happens on the second argument it is no longer possible for Agda to determine that these terms are definitionally equal and requires the programmer to add additional hints to be able to prove this indeed.
-
-It is notable that it is possible to pattern match in proofs as they are just normal programms. 
-For the base case \emph{zero + zero $\equiv$ zero}, \emph{refl} is still enough but on the case where \emph{a} is not \emph{zero} but \emph{suc(x)} the \emph{rewrite} directive is required.
-
-The \emph{rewrite} directive can be used to transform parts of the original problem. If a proof exists that A $\equiv$ B then rewrite will replace A with B in the instantiated type.
-
-But how does this really work?
-The original proof we tried to archive is $x + zero \equiv x$ where x is instantiated with \emph{suc(a)} or more precisely $suc(a) + zero \equiv suc(a)$
-As $suc(a) + zero$ is definitionally equal to $suc(a + zero)$ regarding the second constructor of addition in code snippet \ref{codeSnippet:natural_number_addition}, this can also be written as $suc(a + zero) \equiv suc(a)$.
-
-If now the proof that $a + 0 \equiv a$ gets applied to this the result will be the desired $suc(a) \equiv suc(a)$. The proof $a + 0 \equiv a$ gets archived by calling the proof recursively on $a$ instead of $suc(a)$
+Because the recursion happens on the second argument it is no longer possible for Agda to determine that these terms are definitionally equal and requires the programmer to add additional hints to be able to prove the equality.
 
 \begin{codesnippet}[mathescape=true, caption={Proof of addition to zero in Agda}, label={codeSnippet:x_plus_zero_agda}]
 x+0 : $\forall$ (x : $\mathbb{N}$) $\rightarrow$ x + zero $\equiv$ x
 x+0 zero = refl
 x+0 suc(a) rewrite x+0 a = refl
 \end{codesnippet}
+
+As shown in code snippet \ref{codeSnippet:x_plus_zero_agda} it is possible to pattern match in proofs as proofs are programms.
+For the base case \emph{zero + zero $\equiv$ zero}, \emph{refl} is still enough but on the case where \emph{a} is not \emph{zero} but \emph{suc(x)}, the \emph{rewrite} directive is required.
+
+The \emph{rewrite} directive can be used to transform parts of the original problem. If a proof A $\equiv$ B exists, then \emph{rewrite} will replace A with B in the instantiated type.
+
+But how does this really work?
+The original proof is $x + zero \equiv x$ where x is instantiated with \emph{suc(a)} or more precisely $suc(a) + zero \equiv suc(a)$.
+As $suc(a) + zero$ is definitionally equal to $suc(a + zero)$ regarding the second constructor of addition in code snippet \ref{codeSnippet:natural_number_addition}, this can also be written as $suc(a + zero) \equiv suc(a)$.
+
+If the proof that $a + 0 \equiv a$ gets applied to this, the result will be the desired $suc(a) \equiv suc(a)$. 
+To get the proof $a + 0 \equiv a$ \emph{x+0} gets called recursively on $a$ instead of $suc(a)$
 
 This kind of proof is called proof by induction in mathematics and is actually very common.
 The important thing to remember, as in every recursion, is that a base case as well as partial solution step are required.
