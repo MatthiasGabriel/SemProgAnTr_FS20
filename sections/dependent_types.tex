@@ -1,16 +1,21 @@
 \section{Dependent Types}
 \subsection{Introduction to dependent types}
 There are different kinds of dependent types. The two most common ones are $\Sigma$-types and $\Pi$-types.
-Let us first focus on the $\Pi$-types, which are also used in our first example in section \ref{section_dependent_types_example}. These types are sometimes also called \emph{dependent function types} as in \cite{10.1145/2841316} or \emph{dependent product type} as in \cite{10.5555/1076265}. Be aware that the name dependent product type can also be used for $\Sigma$-types as in \cite{10.1145/2841316}.
+The first focus lies on the $\Pi$-types, which are also used in the first example in section \ref{section_dependent_types_example}. These types are sometimes also called \emph{dependent function types} as in \cite{10.1145/2841316} or \emph{dependent product type} as in \cite{10.5555/1076265}. Be aware that the name dependent product type can also be used for $\Sigma$-types as in \cite{10.1145/2841316}.
 
-Let us remember the example from the introduction in chapter \ref{section:introduction} where the length of a list is specified directly in the type. This data structure is in literature \cite{10.1145/2841316} \cite{10.5555/1076265} often called vector.
-This new data structure is not a simple type but maps an input of type Nat to a specific type. To differentiate between it and normal types the term \emph{type family} is used as suggested by Aspinall and Hofmann in \cite{10.5555/1076265}.
+In the example from the introduction in chapter \ref{section:introduction} where the length of a list is specified directly in the type. This data structure is in the literature often called vector \cite{10.1145/2841316} \cite{10.5555/1076265}.
+This new data structure is not a simple type but maps an input of type \emph{Nat} to a specific type. To differentiate between such as structure and types the term \emph{type family} is used as suggested by Aspinall and Hofmann in \cite{10.5555/1076265}.
 
 $$Vector :: Nat \rightarrow *$$
 
-The type which contains vectors of length k can be constructed by applying k to Vector more concretely Vector k.
-To construct new Vectors two constructors are needed. One which constructs an empty vector and one to add new elements to the vector. This pattern should be familiar for everyone that is used to functional programming so far.
-The second constructor \emph{cons} takes one element n of type Nat, an element of type data as well as a vector with the length n and returns a new vector of length n+1. This can be expected as the new element is added to the input vector. 
+The type which contains vectors of length \emph{k} can be constructed by applying \emph{k} to \emph{Vector} or in other terms \emph{Vector k}.
+
+To construct new Vectors two constructors are needed. 
+One which constructs an empty vector and one to add new elements to the vector. 
+This pattern should be familiar for everyone that is used to functional programming so far.
+
+The second constructor \emph{cons} takes one element \emph{n} of type \emph{Nat}, an element of type \emph{data} as well as a vector with the length \emph{n} and returns a new vector of length \emph{n+1}. 
+The length of the returned vector is increased by one to account for the new element that is added.
 
 $$empty: Vector \, 0$$
 $$cons : \Pi n : Nat. \, data \rightarrow Vector \, n \rightarrow Vector \, (n+1)$$
@@ -38,33 +43,28 @@ $$first : \Pi n : Nat.Vector(n+1) \rightarrow data$$
 To be more clear what this means in practice lets consider a few examples in Agda.
 
 \subsection{Example in Agda}\label{section_dependent_types_example}
-In this chapter, the first dependent data type in Agda the vector will be defined.
-It is essentially a list but in contrast to the list data type defined in chapter \ref{section:agda_introduction_example} the length of the list is a part of the type.
+In this chapter, the first dependent datatype in Agda the vector will be defined.
+It is essentially a list but in contrast to the list datatype defined in chapter \ref{section:agda_introduction_example} the length of the list is a part of the type.
 
-In addition to the implicit type-level and the type A, an additional parameter of type $\mathbb{N}$ is defined in the type definition as shown in code snippet \ref{codeSnippet:vector_data type}.
-There is a difference between \emph{parameters}, used before the colon, and \emph{indices} of a datatype.The datatype $\mathbb{V}$ is parameterised by a type A and indexed over $\mathbb{N}$\cite{norell:deptyped}.
-Parameters are required to be exactly the same for each constructor of a datatype, however, indicies can vary.
+In addition to the implicit type-level and the type A, an additional parameter of type $\mathbb{N}$ is defined in the type definition as shown in code snippet \ref{codeSnippet:vector_datatype}.
 
-The first constructor for the empty vector sets the length of the vector to the fixed value zero of $\mathbb{N}$ because it is known that the list is currently empty and the length is therefore 0.
-The second constructor is used to add new elements to an existing vector. It takes two arguments one of type A and one of type $\mathbb{V}$ A n similar to the list but additionally it determines the implicit argument n of type $\mathbb{N}$ from the input vector.
-This parameter is then used to define the return type. As exactly one new element is added to the existing list of type $\mathbb{V}$ A n it is known that the new type has to be $\mathbb{V}$ A (suc n).
-
-\begin{codesnippet}[mathescape=true, caption={Definition of the vector data type in Agda}, label={codeSnippet:vector_data type}]
+\begin{codesnippet}[mathescape=true, caption={Definition of the vector datatype in Agda}, label={codeSnippet:vector_datatype}]
 data $\mathbb{V}$ {$\ell$} (A : Set $\ell$) : $\mathbb{N}$ $\rightarrow$ Set $\ell$ where
   [] : $\mathbb{V}$ A zero
   _::_ : {n : $\mathbb{N}$} (x : A) (xs: $\mathbb{V}$ A n) $\rightarrow$
          $\mathbb{V}$ A (suc n)
 \end{codesnippet}
 
-Appending two vectors - as seen in code snippet \ref{codeSnippet:vector_append} - is a mix between the appending of two lists and the data type definition of the vector and relatively straightforward.
+There is a difference between \emph{parameters}, used before the colon, and \emph{indices} of a datatype.
+The datatype $\mathbb{V}$ is parameterised by a type A and indexed over $\mathbb{N}$\cite{norell:deptyped}.
+Parameters are required to be exactly the same for each constructor of a datatype, however, indicies can vary.
 
-To prevent a naming conflict between the append operators of lists and vectors the unique name \_++$\mathbb{V}$\_ was chosen.
+The first constructor for the empty vector sets the length of the vector to the fixed value zero of $\mathbb{N}$ because it is known that the list is currently empty and the length is therefore 0.
+The second constructor is used to add new elements to an existing vector. It takes two arguments one of type A and one of type $\mathbb{V}$ A n similar to the list but additionally it determines the implicit argument n of type $\mathbb{N}$ from the input vector.
+This parameter is then used to define the return type. As exactly one new element is added to the existing list of type $\mathbb{V}$ A n it is known that the new type has to be $\mathbb{V}$ A (suc n).
 
-Either a vector append happens with an empty vector to another vector or a non-empty vector is appended to another vector as shown at lines 3 and 4 respectively.
+Appending two vectors - as seen in code snippet \ref{codeSnippet:vector_append} - is a mix between the appending of two lists and the datatype definition of the vector and relatively straightforward.
 
-It is important to note, that the type of these two vectors does not need to be equal as the $\mathbb{N}$ parameter which is also a part of the type, can have different values but the elements contained in both vectors are still required to be of type A.
-
-Following from this the newly constructed vector has the type $\mathbb{V}$ A (n + m).
 \begin{codesnippet}[mathescape=true, caption={Definition of the vector append function in Agda}, label={codeSnippet:vector_append}]
 _++$\mathbb{V}$_ : $\forall$ {$\ell$} {A : Set $\ell$}  {n m: $\mathbb{N}$ $\rightarrow$
         $\mathbb{V}$ A n $\rightarrow \mathbb{V}$ A m $\rightarrow \mathbb{V}$ A (n + m)
@@ -72,59 +72,71 @@ _++$\mathbb{V}$_ : $\forall$ {$\ell$} {A : Set $\ell$}  {n m: $\mathbb{N}$ $\rig
   (x :: xs) ++$\mathbb{V}$ ys = x :: (xs ++$\mathbb{V}$ ys)
 \end{codesnippet}
 
-Until this point, there is little advantage in using $\mathbb{V}$ over $\mathbb{L}$ as we only saw methods that construct new elements of $\mathbb{V}$.
+To prevent a naming conflict between the append operators of lists and vectors the unique name \_++$\mathbb{V}$\_ was chosen.
 
-The next example will present the first benefit of including the length in the data type.
-In case of the list data type $\mathbb{L}$, it was required to define an additional helper data type maybe as described in chapter \ref{section:agda_introduction_example} when implementing the \emph{nth} function.
-Additionally, whenever a programmer uses the function, he has to think of this different cases nothing or just and adjust his functionality - normally with additional pattern matching.
+It is important, that the types of these two vectors does not need to be equal, as the parameters n and m of type $\mathbb{N}$, which are also a part of the types, can have different values. 
+Nevertheless the elements contained in both vectors are still required to be of type A.
+
+It can be deduced that the newly constructed vector has the type $\mathbb{V}$ A (n + m).
+
+The next example will present the first benefit of including the length in the datatype.
+In case of the list datatype $\mathbb{L}$, it was required to define an additional helper datatype \emph{maybe} as described in section \ref{section:agda_introduction_example} when implementing the \emph{nth} function.
+Additionally, whenever a programmer uses the function, he has to think of the different cases \emph{nothing} or \emph{just} and adjust his functionality. This is done with additional pattern matching.
 
 The same restrictions are met by the \emph{head} function of a $\mathbb{L}$. 
 However, the \emph{head} function of $\mathbb{V}$ shown in code snippet \ref{codeSnippet:vector_head} always returns a single object of type A.
-This is possible by using the additional information of the implicit parameter \emph{n} of type $\mathbb{N}$, respectivelly by restricting the input vector to the type $\mathbb{V}$ A suc(n).
-Elements of this type are known to have a least one entry, in this case the implicit parameter would be zero.
 
-It is possible to define the \emph{head} without specificing a pattern for the empty vector [] as the type checker can infer that this case is not possible.
-Whenever a particular case is type correct it is necessary to include it, otherwise it needs to be omitted \cite{norell:deptyped}.
-\begin{codesnippet}[mathescape=true, caption={Definition of \emph{head} function in Agda}, label={codeSnippet:vector_head}]
+\begin{codesnippet}[mathescape=true, caption={Definition of $head\mathbb{V}$ function in Agda}, label={codeSnippet:vector_head}]
 head$\mathbb{V}$ : $\forall$ {$\ell$} {A : Set $\ell$} {n : $\mathbb{N}$} $\rightarrow$ 
         $\mathbb{V}$ A suc(n) $\rightarrow$ A
 head$\mathbb{V}$ (x :: _) = x
 \end{codesnippet}
 
-One step further the function \emph{nth$\mathbb{V}$} also has an additional implicit parameter m of type $\mathbb{N}$ which represents the length of the input vector. 
-The second explicit parameter is a proof that n is less than m.
-In contrast to the function \emph{nth} this function returns always an A instead of a maybe A as it was before.
+This is possible by using the additional information of the implicit parameter \emph{n} of type $\mathbb{N}$, respectivelly by restricting the input vector to the type $\mathbb{V}$ A suc(n).
+Elements of this type are known to have a least one entry, in this case the implicit parameter would be zero.
 
-Let us have a little bit closer look at this whole function in code snippet \ref{codeSnippet:vector_nth} starting with line 3. It states that if the element at index 0 is wanted, the head of the list is returned.
-The proof and the tail of the list are not used, and therefore replaced by an \_. This is the base case.
+It is possible to define the \emph{head} without specificing a pattern for the empty vector [] as the type checker can infer that this case is not possible.
+Whenever a particular case is type correct it is necessary to include it, otherwise it needs to be omitted \cite{norell:deptyped}.
 
-At line 4 the recursive case is defined which calls \emph{nth$\mathbb{V}$} again but with the predecessor of n and the tail of the current vector.
-The proof p is directly passed into the new function call. At first glance, this might look a little bit unusual, but because, both the index as well as the length of the new vector - in the recursion case xs - 
-are decreased by exactly one, the proof still holds, as suc n $<$ suc m $\equiv$ tt and n $<$ m $\equiv$ tt are definitionally equal.
-
-Let us focus on the last two lines which look quite different than any of the definitions we saw.
-Because it is not possible to prove that suc n $<$ m where m is the length of the empty list, or more concretely zero, the so-called absurd pattern can be used. This basically tells Agda that this case can never be reached and therefore no definition for this case has to exist.
-The reason why the last line is required too lies in the definition of \_$<$\_ of $\mathbb{N}$ shown in code snippet \ref{codeSnippet:natural_number_less_than}.
-Because in this definition a case distinction between $0 < 0$ and $\text{(suc x)} < 0$ was made, the last line, which proves that zero $<$ zero $\equiv$ tt is false, is required as well.
+Similar to \emph{head$\mathbb{V}$} the function \emph{nth$\mathbb{V}$} in code snippet \ref{codeSnippet:vector_nth} has an implicit parameter m of type $\mathbb{N}$ which represents the length of the input vector. 
+Additionally it contains the second explicit parameter is a proof that n is less than m.
 
 \begin{codesnippet}[mathescape=true, caption={Definition of \emph{nth} function in Agda}, label={codeSnippet:vector_nth}]
 nth$\mathbb{V}$ : $\forall$ {$\ell$} {A : Set $\ell$} {m : $\mathbb{N}$} $\rightarrow$
-       n : $\mathbb{N}$ $\rightarrow$ n < m $\equiv$ tt $\rightarrow \mathbb{V}$ A m $\rightarrow$ A
+       (n : $\mathbb{N}$) $\rightarrow$ n < m $\equiv$ tt $\rightarrow \mathbb{V}$ A m $\rightarrow$ A
 nth$\mathbb{V}$ zero _ (x :: _) = x
 nth$\mathbb{V}$ (suc n) p (_ :: xs) = nth$\mathbb{V}$ n p xs
 nth$\mathbb{V}$ (suc n) () []
 nth$\mathbb{V}$ zero () []
 \end{codesnippet}
 
-To call this function you now have to deliver a proof that m $<$ n is equivalent to tt. This can easily be done by using refl.\todo{explain refl} \todo{state that a digit representation is possible without going into details about pragmas. Maybe in the agda section.}
-\begin{codesnippet}[mathescape=true, caption={Usage of \emph{nth} function in Agda}, label={codeSnippet:vector_nth_usage}]
-test-vector : $\mathbb{V}$ $\mathbb{B}$ 4
-test-vector = ff :: tt :: ff :: ff :: []
-element = nth$\mathbb{V}$ 3 refl test-vector
+The base case of the \emph{nth$\mathbb{V}$} recursive function is at line 3. It states that if the element at index 0 is wanted, the head of the list is returned.
+To indicate that the proof, that zero is smaller than length of the vector, as well as the tail of the vector are not used in the definition of the function they are replaced by an \_.
 
-invalid_element = nth$\mathbb{V}$ 4 refl test-vector
+At line 4 the recursive case is defined which calls \emph{nth$\mathbb{V}$} but with the predecessor of n and the tail of the current vector.
+The second argument \emph{p}, which contains the proof that $suc(n)$ is smaller than the length of the vector, is directly passed into the new function call. 
+At first glance, this might look a little bit unusual. 
+It is possible because, both the index as well as the length of the new vector \emph{xs} are decreased by exactly one, the proof still holds.
+The proof \emph{p} is still valid as \emph{suc n $<$ suc m $\equiv$ tt} and \emph{n $<$ m $\equiv$ tt} are definitionally equal.
+
+The last two lines look quite different than any of the definitions before.
+Because it is not possible to prove that \emph{suc n $<$ m $\equiv$ tt} where m is the length of the empty list, or more concretely zero, the so-called absurd pattern can be used. 
+This basically tells Agda that this case can never be reached and therefore no definition for this case has to exist.
+The last line is required lies in the definition of \_$<$\_ of $\mathbb{N}$ shown in code snippet \ref{codeSnippet:natural_number_less_than}.
+Because in that definition a case distinction between $0 < 0$ and $\text{(suc x)} < 0$ was made, the last line, which proves that \emph{zero $<$ zero $\equiv$ tt} is false, is required as well.
+
+Whenever the function \emph{nth$\mathbb{V}$} is called, a proof that m $<$ n is equivalent to tt is required as shown in code snippet \ref{codeSnippet:vector_nth_usage}. This can easily be done by using refl.
+
+
+\todo{state that a digit representation is possible without going into details about pragmas. Maybe in the agda section.}
+\begin{codesnippet}[mathescape=true, caption={Usage of \emph{nth} function in Agda}, label={codeSnippet:vector_nth_usage}]
+test-vector = ff :: ff :: []
+element = nth$\mathbb{V}$ (suc zero) refl test-vector
+
+invalid_element = nth$\mathbb{V}$ (suc(suc zero)) refl test-vector
 \end{codesnippet}
 
+The code snippet \ref{codeSnippet:vector_nth_usage} will not compile as the proof refl in the call on the last line is invalid as \emph{suc(suc zero) $<$ suc(suc zero) $\equiv$ ff}.
 
 \subsection{$\Sigma$-types}
 In addition to $\Pi$-types, there exists a second important class of dependent types. 
@@ -183,6 +195,3 @@ Agda can prove that \emph{iszero (suc x)} is always false and therefore the proo
 suc$^+$ : $\mathbb{N}^+$ $\rightarrow$ $\mathbb{N}^+$
 suc$^+$ (x, p) = (suc x, refl)
 \end{codesnippet}
-
-\subsection{Advanced Example in Agda}
-A more advanced example in Agda. Such as brown tree or even parts of the Huffman encoding.
