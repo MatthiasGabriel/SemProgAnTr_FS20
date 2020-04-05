@@ -122,7 +122,8 @@ This allows it that proofs can be directly represented in the programming langua
 \subsubsection{Proofs as programs in Agda}
 Lets now consider a first small example in Agda.
 
-In Agda it is possbile to define propositional equalities such as $zero + suc(zero) \equiv suc(zero)$. The type of this term is \emph{Set} which is the type of types. This was the first application of propositions as types.
+In Agda it is possbile to define propositional equalities such as $zero + suc(zero) \equiv suc(zero)$. The type of this term is \emph{Set} which is the type of types.
+This was the first application of propositions as types.
 However this proposition is not proved yet. It is also possible to state false propositions such as $zero + suc(zero) \equiv zero$ without any compiler errors.
 
 To prove this proposition a program of the type $zero + suc(zero) \equiv suc(zero)$ has to be implemented.
@@ -138,12 +139,16 @@ $$\text{0+1=1} = refl$$
 
 If the program gets typechecked successfully, the proof is completed.
 
-This proof is very specific to these values, similiar to a single test case. But it is possible to extend this proof to any Peano number $\mathbb{N}$. 
-To do this the universal quantifier $\forall$, which is also common in mathematics, is used. It allows it to state that the following property should hold for every possible assignment\cite{plfa2019}.
+This proof is very specific to these values, similiar to a single test case.
+But in combination with a dependent function type it is possible to extend this proof to any Peano number $\mathbb{N}$. 
+To do this the universal quantifier $\forall$, which is also common in mathematics, is used.
+It allows it to state that the following property should hold for every possible assignment\cite{plfa2019}.
 The $\forall$ symbol is one of the few reserved keywords in Agda.
 
-The new proposition in code snippet \ref{codeSnippet:zero_plus_x_agda} is now a little more complex but still comprehensible. It states that for every x of type $\mathbb{N}$ the following equivalence holds. 
-Because an variable \emph{x} is defined in the type, the program requires an input argument. In this code snippet this argument gets assigned to the variable \emph{a}.
+The new proposition in code snippet \ref{codeSnippet:zero_plus_x_agda} is now a little more complex but still comprehensible. 
+It states that for every x of type $\mathbb{N}$ the following equivalence holds. 
+Because a variable \emph{x} is defined in the type, the program requires an input argument.
+In this code snippet this argument gets assigned to the variable \emph{a}.
 
 \begin{codesnippet}[mathescape=true, caption={Proof of addition to zero in Agda}, label={codeSnippet:zero_plus_x_agda}]
 0+x : $\forall$ (x : $\mathbb{N}$) $\rightarrow$ zero + x $\equiv$ x
