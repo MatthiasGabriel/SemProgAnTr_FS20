@@ -227,14 +227,12 @@ The code snippet \ref{codeSnippet:vector_nth_usage} will not compile, as the pro
 In addition to $\Pi$-types, there exists a second important class of dependent types. 
 The $\Sigma$-types also called \emph{dependent product types}\cite{10.1145/2841316},\emph{dependent pair types}\cite{10.1145/2841316} or \emph{dependent sum types}\cite{10.5555/1076265}.
 
-A $\Sigma$-type is the generalization of the ordinary product type. 
-It is basically a combination of two types where each element of this type is a pair. 
-But the type of the second element of the pair may depend on the value of the first element.
+A $\Sigma$-type is the generalization of the ordinary Cartesian product type $A \times B$. 
+It is a combination of two types where each element of this type is a pair. 
+But the type type of the second element may depend on the value of the first element.
 
-\todo{Verify}
 $$\Sigma x: A.B \,= \, A \times B$$
 $$where \, x \, does \, not \, appear \, free \, in \, B$$
-
 
 Another good description of the $\Sigma$-type is the following. 
 Elements of the type are pairs $(a, b)$ under the condition that $a \in A$ and $b \in B_a$.
@@ -242,6 +240,8 @@ Elements of the type are pairs $(a, b)$ under the condition that $a \in A$ and $
 \todo{Extend this with relation to Curry-Howard Isomorphism/Correspondence as existential quantification}
 Dependent $\Sigma$-types are often used to express an element with a certain property and its corresponding proof.
 \todo{maybe add an example}
+
+As the implementation of $\Sigma$ in codesnippet \ref{codeSnippet:sigma} shows, it is possible to express $\Sigma$ in terms of $\Pi$ and no further language feature is required.
 
 \subsection{$\Sigma$-types in Agda}
 The simplest example for $\Sigma$-types in Agda is the type of nonzero Peano numbers.
