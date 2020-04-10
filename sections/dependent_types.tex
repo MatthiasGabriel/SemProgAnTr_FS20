@@ -21,11 +21,10 @@ The length of the returned vector is increased by one to account for the new ele
 $$empty: Vector \, 0$$
 $$cons : \Pi n : Nat. \, data \rightarrow Vector \, n \rightarrow Vector \, (n+1)$$
 
-Dependent function types can be described as $\Pi x : A. B$ where x can be used to define B. 
-This is the generalization of the arrow type used in simply typed lambda-calculus. Every arrow type can also be expressed as a $\Pi$-type.
+Dependent function types can be described as $\Pi \text{x:A. B}$ where x is of type A and can be used to define B. 
+This is the generalization of the arrow type used in simply typed lambda-calculus which means that every arrow type can also be expressed as a $\Pi$-type.
 
-\todo{Verify}
-$$A \rightarrow B \, = \, \Pi x:A.B$$
+$$A \rightarrow B \, = \, \Pi \text{x:A. B}$$
 $$where \, x \, does \, not \, appear \, free \, in \, B$$
 
 Another description of the $\Pi$-type is the following. A function maps an element $a \in A$ to a new element $b \in B_a$. 
@@ -33,7 +32,7 @@ This is also called type B is indexed by type A \cite{10.1145/2841316}.
 
 \todo{Extend this with relation to Curry-Howard Isomorphism/Correspondence as universal quantification}
 
-This additional information that is now encoded in the type can be exploited whenever such a type is used. 
+The additional information that is encoded in the type can be exploited whenever such a type is used. 
 Consider a first example, where the function \emph{head} is defined, which returns the first element of a vector.
 
 $$head : \Pi n : Nat.Vector(n+1) \rightarrow data$$
