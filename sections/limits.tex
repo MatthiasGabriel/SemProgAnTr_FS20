@@ -1,9 +1,21 @@
 \section{Theoretical and practical limits}
 \subsection{Theoretical limits}
+As already discussed in section \ref{section:total_languages} dependent types require a total language such that the type-checker can correctly determine all types.
+* Non-termination / general recursion
+* I/O
+* 
+
+\todo{cleanup}
 Something about the theoretical limits of dependent types.
 \subsection{Practical limits}
+In addition to the theoretical limits that languages that support dependent types have, there are additional problems for the use of dependent types in practical software.
+The most important limitation is that writing proofs, which is one of the main features that dependent types enable, can be extremely difficult and time consuming.
+Aaron Stump says to that topic: "Yes, mathematicians are in business for a reason: theorem proving can be extremely difficult, with a single conjecture stumping the brightest minds humankind has to offer for centuries." \cite{10.1145/2841316}
+
+\todo{cleanup}
 Something about the limits of dependent types in practice.
 \subsection{Who and where to use}
+\todo{cleanup}
 This publication is heavely focused on Agda but there are many other languages which support dependent types and some of them are more common in industry.
 Even though Agda programs can be compiled to Haskell or JavaScript there are little references found that use Agda to solve practical problems but only used as an introduction to dependent types.
 
