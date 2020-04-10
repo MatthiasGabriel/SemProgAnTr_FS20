@@ -10,7 +10,13 @@ Something about the theoretical limits of dependent types.
 \subsection{Practical limits}
 In addition to the theoretical limits that languages that support dependent types have, there are additional problems for the use of dependent types in practical software.
 The most important limitation is that writing proofs, which is one of the main features that dependent types enable, can be extremely difficult and time consuming.
-Aaron Stump says to that topic: "Yes, mathematicians are in business for a reason: theorem proving can be extremely difficult, with a single conjecture stumping the brightest minds humankind has to offer for centuries." \cite{10.1145/2841316}
+Aaron Stump gives the following statement in Verified Functional Programming in Agda \cite{10.1145/2841316}:
+\begin{quote}
+Yes, mathematicians are in business for a reason: theorem proving can be extremely difficult, with a single conjecture stumping the brightest minds humankind has to offer for centuries.
+\end{quote}
+
+Another obstacle is that some functions are not directly recognised as structurally terminating which increases the implementation effort enormously.
+The most common example is the division function of Peano numbers $\mathbb{N}$ which is contained in an own chapter in different publications \cite{10.1145/2841316, Bove2009} but will not be discussed further in this publication. 
 
 \todo{cleanup}
 Something about the limits of dependent types in practice.
