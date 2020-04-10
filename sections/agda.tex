@@ -20,11 +20,16 @@ data $\mathbb{N}$: Set where
   suc  : $\mathbb{N} \rightarrow \mathbb{N}$
 \end{codesnippet}
 
-\todo{Add reference to explanation of set and $\ell$}
 To define a new datatype it is required to specify the name of the type after the keyword \emph{data}.
 Separated by a colon the type of the new datatype is defined - normally this is \emph{Set}.
 \emph{Set} is a special kind of type which is the type of types.
 It is required to specify the type of this new datatype because in Agda every expression has a type \cite{norell:deptyped}.
+
+But not every type is of type \emph{Set} because this would lead to nonterminating behaviour, as the type of \emph{Set} would also be \emph{Set}.
+
+Agda instead uses an infinite number of \emph{Set} types, \emph{Set 0}, \emph{Set 1}, \emph{Set 2}, ..., where elements of the next Set are potentially larger.
+The expression \emph{Set n} is of type \emph{Set (n+1)} where \emph{Set n} is a \emph{universe} and n is called \emph{universe level} or \emph{type level} \cite{AgdaReadTheDocs, 10.1145/2841316}.
+\emph{Set} without any number as used in the definition of $\mathbb{N}$ is just an abbreviation for \emph{Set 0}.
 
 After this basic definition two different constructors \emph{zero} and \emph{suc} are defined as shown in code snippet \ref{codeSnippet:natural_number}.
 There is little meaning in this short definition other than elements constructed with these operations are of type $\mathbb{N}$.
@@ -86,8 +91,6 @@ data $\mathbb{B}$ : Set where
 \subsubsection{Type Parameters}
 The definition of the list datatype as seen in code snippet \ref{codeSnippet:list_datatype} is more complex than the previous datatype definitions of $\mathbb{B}$ and $\mathbb{N}$ as it contains a type parameter.
 The application of another type to the list datatype results in an own unique type, this concept is called type-level function.
-
-\todo{Verify that this is a type-level function}
 
 \begin{codesnippet}[mathescape=true, caption={Definition of the list datatype in Agda}, label={codeSnippet:list_datatype}]
 data $\mathbb{L}$ {$\ell$} (A : Set $\ell$) : Set $\ell$ where
