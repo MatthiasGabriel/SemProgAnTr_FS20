@@ -203,13 +203,13 @@ At line 4 the recursive case is defined which calls \emph{nth$\mathbb{V}$} but w
 The second argument \emph{p}, which contains the proof that $suc(n)$ is smaller than the length of the vector, is directly passed into the new function call. 
 At first glance, this might look a little bit unusual. 
 It is possible because, both the index as well as the length of the new vector \emph{xs} are decreased by exactly one, the proof still holds.
-The proof \emph{p} is still valid as \emph{suc n $<$ suc m $\equiv$ tt} and \emph{n $<$ m $\equiv$ tt} are definitionally equal.
+The proof \emph{p} is still valid as \emph{suc n $<$ suc m $\equiv$ true} and \emph{n $<$ m $\equiv$ true} are definitionally equal.
 
 The last two lines look quite different than any of the definitions before.
-Because it is not possible to prove that \emph{suc n $<$ m $\equiv$ tt} where m is the length of the empty list, or more concretely zero, the so-called absurd pattern can be used. 
+Because it is not possible to prove that \emph{suc n $<$ m $\equiv$ true} where m is the length of the empty list, or more concretely zero, the so-called absurd pattern can be used. 
 This basically tells Agda that this case can never be reached and therefore no definition for this case has to exist.
 The last line is required lies in the definition of \_$<$\_ of $\mathbb{N}$ shown in code snippet \ref{codeSnippet:natural_number_less_than}.
-Because in that definition a case distinction between $0 < 0$ and $\text{(suc x)} < 0$ was made, the last line, which proves that \emph{zero $<$ zero $\equiv$ tt} is false, is required as well.
+Because in that definition a case distinction between $0 < 0$ and $\text{(suc x)} < 0$ was made, the last line, which proves that \emph{zero $<$ zero $\equiv$ true} is false, is required as well.
 
 Whenever the function \emph{nth$\mathbb{V}$} is called, a proof that m $<$ n is equivalent to \emph{true} is required as shown in code snippet \ref{codeSnippet:vector_nth_usage}. This can easily be done by using refl.
 
@@ -222,7 +222,7 @@ invalid_element = nth$\mathbb{V}$ (suc(suc zero))
                   refl testVector
 \end{codesnippet}
 
-The code snippet \ref{codeSnippet:vector_nth_usage} will not compile, as the proof refl in the call on the last line is invalid, as \emph{suc(suc zero) $<$ suc(suc zero) $\equiv$ ff}.
+The code snippet \ref{codeSnippet:vector_nth_usage} will not compile, as the proof refl in the call on the last line is invalid, as \emph{suc(suc zero) $<$ suc(suc zero) $\equiv$ false}.
 
 \subsection{$\Sigma$-types}
 In addition to $\Pi$-types, there exists a second important class of dependent types. 
@@ -252,7 +252,7 @@ The definition of $\mathbb{N}^+$ states that each element is a pair of a Peano n
 
 \begin{codesnippet}[mathescape=true, caption={Definition of nonzero Peano numbers in Agda}, label={codeSnippet:nonzero_natural_number}]
 $\mathbb{N}^+$ : Set
-$\mathbb{N}^+$ = $\Sigma$ $\mathbb{N}$ ($\lambda$ n $\rightarrow$ iszero n $\equiv$ ff)
+$\mathbb{N}^+$ = $\Sigma$ $\mathbb{N}$ ($\lambda$ n $\rightarrow$ iszero n $\equiv$ false)
 \end{codesnippet}
 
 The $\Sigma$ used in code snippet \ref{codeSnippet:nonzero_natural_number} from IAL is a simplification of the one defined in the standard library of Agda and only consists of three lines shown in code snippet \ref{codeSnippet:sigma}.
