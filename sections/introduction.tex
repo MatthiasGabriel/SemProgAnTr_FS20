@@ -26,7 +26,7 @@ String e2 = (String)v.get(1); //Type error at compile time
 \end{codesnippet}
 \end{adjustbox}
 
-Similarly, the concept of dependent types tries to detect additional programming errors at compile time. 
+Similarly, the concept of dependent types tries to detect additional programming errors at compile time.
 But instead of depending on types as parameters, it may additionally depend on specific values. 
 
 The easiest and probably the most understandable usage of dependent types is the extension of a list data type with the length of the list. 
@@ -39,7 +39,7 @@ Integer i = v.get(1); // run time error
 \end{codesnippet}
 
 Of course, it is known how many elements this list contains but this information is not available at compile time. 
-However, it would be useful if this kind of error would be detected by the compiler. 
+However, it would be useful if this kind of error would be detected by the compiler.
 
 Now imagine that it would be possible to supply an additional parameter to the type which specifies the length of the list as shown in code snippet \ref{codeSnippet:hypothetical_dependet_types}. 
 The compiler would now be able to detect the access to the wrong index and stop the compilation with an appropriate error\footnote{The example in code snippet \ref{codeSnippet:hypothetical_dependet_types} is purely fictional and beside the missing language feature other issues such as the mutability of ArrayLists exist.}.
@@ -49,6 +49,23 @@ List<Integer,(*\highlight{0}*)> v = new ArrayList<Integer,(*\highlight{0}*)>();
 v.add(1);
 Integer i = v.get(1); // compile time error
 \end{codesnippet}
+
+In type theory exist four different families of expression, which are indexed by other expressions, as pointed out by Pierce in \cite{10.5555/1076265}. 
+
+The first is the family of terms indexed by terms, also known as lambda expression, introduced in simply typed lambda-calculus. 
+The second is the family of terms indexed by types, known als polymorphism. 
+The third is the family of types indexed by types, known as type operator, is used generics. 
+The forth and last family is the family of types indexed by terms, known as dependent types.
+
+In the lambda cube show in figure \ref{fig:lambda_cube} was introduced by Barendregt \cite{lambda_cube} and visualizes these abstractions and its use in different type systems. Every of the displayed systems uses the first abstraction. Systems in the top include polymorphism, systems in the back support type operators and the right side contains systems, which include dependent types.
+\begin{figure}[h]
+\centering
+\includegraphics[width=3cm]{1200px-Lambda_Cube_img}
+\caption{The lambda cube by Henk Barendregt.}
+\label{fig:lambda_cube}
+\end{figure}
+
+
 
 The biggest benefit of dependent types is the possibility to formulate constructive proofs about the desired properties of the program directly in it.
 If the need for safe and secure software continues to increase as it did in the past, the need for dependent types will likely increase as well.
