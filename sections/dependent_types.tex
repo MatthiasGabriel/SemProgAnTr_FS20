@@ -189,7 +189,7 @@ However, it contains an additional explicit parameter, which is a proof that n i
 
 \begin{codesnippet}[mathescape=true, caption={Definition of \emph{nth} function in Agda}, label={codeSnippet:vector_nth}]
 nth$\mathbb{V}$ : $\forall$ {$\ell$} {A : Set $\ell$} {m : $\mathbb{N}$} $\rightarrow$
-       (n : $\mathbb{N}$) $\rightarrow$ n < m $\equiv$ tt $\rightarrow \mathbb{V}$ A m $\rightarrow$ A
+       (n : $\mathbb{N}$) $\rightarrow$ n < m $\equiv$ true $\rightarrow \mathbb{V}$ A m $\rightarrow$ A
 nth$\mathbb{V}$ zero _ (x :: _) = x
 nth$\mathbb{V}$ (suc n) p (_ :: xs) = nth$\mathbb{V}$ n p xs
 nth$\mathbb{V}$ (suc n) () []
@@ -211,11 +211,11 @@ This basically tells Agda that this case can never be reached and therefore no d
 The last line is required lies in the definition of \_$<$\_ of $\mathbb{N}$ shown in code snippet \ref{codeSnippet:natural_number_less_than}.
 Because in that definition a case distinction between $0 < 0$ and $\text{(suc x)} < 0$ was made, the last line, which proves that \emph{zero $<$ zero $\equiv$ tt} is false, is required as well.
 
-Whenever the function \emph{nth$\mathbb{V}$} is called, a proof that m $<$ n is equivalent to tt is required as shown in code snippet \ref{codeSnippet:vector_nth_usage}. This can easily be done by using refl.
+Whenever the function \emph{nth$\mathbb{V}$} is called, a proof that m $<$ n is equivalent to \emph{true} is required as shown in code snippet \ref{codeSnippet:vector_nth_usage}. This can easily be done by using refl.
 
 \todo{state that a digit representation is possible without going into details about pragmas. Maybe in the agda section.}
 \begin{codesnippet}[mathescape=true, caption={Usage of \emph{nth} function in Agda}, label={codeSnippet:vector_nth_usage}]
-testVector = ff :: ff :: []
+testVector = false :: false :: []
 element = nth$\mathbb{V}$ (suc zero) refl testVector
 
 invalid_element = nth$\mathbb{V}$ (suc(suc zero)) 

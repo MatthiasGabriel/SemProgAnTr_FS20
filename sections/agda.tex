@@ -66,22 +66,21 @@ An additional function for Peano numbers which is used in this publication is th
 
 \begin{codesnippet}[mathescape=true, caption={Peano numbers less-than}, label={codeSnippet:natural_number_less_than}]
 _<_ : $\mathbb{N} \rightarrow \mathbb{N} \rightarrow \mathbb{B}$
-0 < 0 = ff
-0 < (suc y) = tt
+0 < 0 = false
+0 < (suc y) = true
 (suc x) < (suc y) = x < y
-(suc x) < 0 = ff
+(suc x) < 0 = false
 \end{codesnippet}
 
 The \_\textless\_ function follows the same structure as the \_+\_ function, but includes four different pattern matching cases. 
 This might not be the smallest possible definition possible but it is very precise and comprehensible.
 
-\todo{Maybe replace tt with true and ff with false which in my opinion is nicer}
-The boolean datatype $\mathbb{B}$ consists of two constructors \emph{tt} (representing true) and \emph{ff} (representing false) is shown in code snippet \ref{codeSnippet:boolean} for completeness.
+The boolean datatype $\mathbb{B}$ consists of two constructors \emph{true} and \emph{false} is shown in code snippet \ref{codeSnippet:boolean} for completeness.
 
 \begin{codesnippet}[mathescape=true, caption={Definition of the boolean datatype in Agda}, label={codeSnippet:boolean}]
-data $\mathbb{B}$: Set where
-  tt : $\mathbb{B}$
-  ff  : $\mathbb{B}$
+data $\mathbb{B}$ : Set where
+  true : $\mathbb{B}$
+  false  : $\mathbb{B}$
 \end{codesnippet}
 
 \subsubsection{Type Parameters}
