@@ -25,7 +25,9 @@ Integer e1 = v.get(0);
 String e2 = (String)v.get(1); //Type error at compile time
 \end{codesnippet}
 \end{adjustbox}
-In Haskell these generic types were built in from the start are a key features of its type system. The analogy to the Java example is \emph{"test" : 1 : []} which does not compile.
+\linebreak
+
+In Haskell such generic types were built in from the start and are a key features of its type system. The analogy to the Java example is \emph{"test" : 1 : []} which does not compile.
 
 Similarly, the concept of dependent types tries to detect additional programming errors at compile time.
 But instead of depending on types as parameters, it may additionally depend on specific values. 
@@ -39,7 +41,7 @@ v.add(1);
 Integer i = v.get(1); // run time error
 \end{codesnippet}
 
-It is known how many elements this list contains but this information is not available at compile time. 
+Even though it is known to the developer how many elements this list contains, this information is not available at compile time. 
 However, it would be useful if this kind of error could be detected by the compiler.
 
 Now imagine that it would be possible to supply an additional parameter to the type which specifies the length of the list as shown in code snippet \ref{codeSnippet:hypothetical_dependet_types}. 
@@ -51,6 +53,7 @@ v.add(1);
 Integer i = v.get(1); // compile time error
 \end{codesnippet}
 \end{adjustbox}
+\linebreak
 
 In type theory exist four different families of expression, which are indexed by other expressions, as pointed out by Pierce in \cite{10.5555/1076265}. 
 
