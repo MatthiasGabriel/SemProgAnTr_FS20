@@ -157,8 +157,10 @@ The \emph{maybe} datatype solves the issue for the function \emph{nth} but where
 In comparison to other programming language, Agda is a so-called total programming language \cite{AgdaReadTheDocs}.
 This means that every valid Agda programs will always terminate with the correct type. There is no exception to this.
 
+In contrast to this, non-total languages often also terminate with the correct type, but they may also not terminate or raise an exception because something was not as expected and the behaviour for this special case was not defined.
+
 It is fundamental for Agda to be total because computations can be already required during type checking.
-If non-terminating computations were possible, typechecking itself would be undecidable\cite{agda_wiki_totality}.
+If non-terminating computations were possible, type checking itself would be undecidable\cite{agda_wiki_totality}.
 
 To ensure the totality of a program beside type checking, coverage checking as well as termiantion checking are of great importance. 
 Additionally \emph{strict positivity of constructors} as well as \emph{guardedness in coinductive programs} have to be checked, which are not discussed further in this publication.
@@ -176,5 +178,3 @@ This is the case as $m$ is structurally smaller than \emph{suc m} based on the d
 Beside \emph{primitive recursion} Agda is able to determine termination on \emph{structural recursion}.
 This requires the argument of the recursive call to be a subexpression of the original argument.
 As a contrast to \emph{primitive recursion} a recusive call with $m$ is also possible if the original argument was \emph{suc(suc m)}.
-
-In contrast to this, non-total languages often also terminate with the correct type, but they may also not terminate or raise an exception because something was not as expected and the behaviour for this special case was not defined.
