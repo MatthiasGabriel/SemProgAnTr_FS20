@@ -1,13 +1,13 @@
 \section{Theoretical and practical limits}
 \subsection{Theoretical limits}
 As already discussed in section \ref{section:total_languages} dependent types require a total language to be able to represent programs as proofs.
-This also requires recusive functions to be in a special scheme.
-Currently only simple recusions are supported in popular dependently typed languages such as Agda, but more powerful termination-checkers are under research.
+This also requires recursive functions to be in a special scheme.
+Currently, only simple recursions are supported in popular dependently typed languages such as Agda, but more powerful termination-checkers are under research.
 
 In Agda it is possible to disable termination checking with the consequence that certain properties can not be proved.
 \subsection{Practical limits}
 In addition to the theoretical limits that languages that support dependent types have, there are additional problems for the use of dependent types in practical software.
-The most important limitation is that writing proofs, which is one of the main features that dependent types enable, can be extremely difficult and time consuming.
+The most important limitation is that writing proofs, which is one of the main features that dependent types enable, can be extremely difficult and time-consuming.
 Aaron Stump gives the following statement in Verified Functional Programming in Agda \cite{10.1145/2841316}:
 \begin{quote}
 Yes, mathematicians are in business for a reason: theorem proving can be extremely difficult, with a single conjecture stumping the brightest minds humankind has to offer for centuries.
@@ -24,16 +24,19 @@ div m n | m >= n = 1 + div (m - n) n
 The division example and its solution is contained in an own chapter in different publications \cite{10.1145/2841316, Bove2009} but will not be discussed further in this publication.
 
 \subsection{Who and where to use}
-This publication is heavely focused on Agda but there are many other languages which support dependent types and some of them are more common in industry.
-Even though Agda programs can be compiled to Haskell or JavaScript there are little references found that use Agda to solve practical problems but only used as an introduction to programming language theory or just dependent types.
+This publication is heavily focused on Agda but there are many other languages which support dependent types and some of them are more common in the industry.
+Even though Agda programs can be compiled to Haskell or JavaScript there are little references found that use Agda to solve practical problems but only used as an introduction to programming language theory or the concept of dependent types.
 
-In 2016 Eisenberg wrote in \emph{Dependent Types in Haskell: Theory and Practice} \cite{DBLP:journals/corr/Eisenberg16}: \quote{Haskell, as implemented in the Glasgow Haskell Compiler (GHC), has been adding new type-level programming features for some time. Many of these features---chiefly: generalized algebraic datatypes (GADTs), type families, kind polymorphism, and promoted datatypes---have brought Haskell to the doorstep of dependent types. Many dependently typed programs can even currently be encoded, but often the constructions are painful.}
+In 2016 Eisenberg wrote in \emph{Dependent Types in Haskell: Theory and Practice} \cite{DBLP:journals/corr/Eisenberg16}: 
+\begin{quote}
+Haskell, as implemented in the Glasgow Haskell Compiler (GHC), has been adding new type-level programming features for some time. Many of these features---chiefly: generalized algebraic datatypes (GADTs), type families, kind polymorphism, and promoted datatypes---have brought Haskell to the doorstep of dependent types. Many dependently typed programs can even currently be encoded, but often the constructions are painful.
+\end{quote}
 
-In the same publication he introduced additional support for dependent types directly into GHC. It is listed as a proposal to extend Haskell with dependent types in the Haskell wiki \cite{haskell_wiki}.
+In the same publication, he introduced additional support for dependent types directly into GHC. It is currently listed as a proposal to extend Haskell with dependent types in the Haskell wiki \cite{haskell_wiki}.
 
-Even though there are efforts to improve this situation for Haskell, and with it introduce dependent types to a much bigger community, it seems that the situation has not improved very much in the last years.
+Even though there are efforts to improve the situation for Haskell, and with it introduce dependent types to a much bigger community, it seems that it has not improved very much in the last years.
 
-A case analysis from Christiansen et al \cite{10.1145/3341704} on the construction of a Haskell library for symbolic execution, which uses dependent type features, shows that the new features allowed it to improve the code correctness. The static well formedness checks, which could be introduced, helped during refactorings as well. However, they noticed different difficulties, including tooling support, type system limitations, as well as the massive need for manual proofs. Additionally they state that it is hard to find developers which are skilled enough in Haskell and depependdently typed programming and that the entry into this combination is laborious.
+A case analysis from Christiansen et al \cite{10.1145/3341704} on the construction of a Haskell library for symbolic execution, which uses dependent type features, shows that the new features allowed to improve the code correctness. The static well-formedness checks, which could be introduced, helped during refactorings as well. However, they noticed different difficulties, including tooling support, type system limitations, as well as the massive need for manual proofs. Additionally, they state that it is hard to find developers who are skilled enough in Haskell and dependently typed programming and that the entry into this combination is laborious.
 
 Another dependently typed programming language that is used in somewhat industry near projects is F*. 
 Its most notable usage is in the Project Everest \cite{project_everest_github_io}. The primary aim of Project Everest is to build a fully verified HTTPS stack.
