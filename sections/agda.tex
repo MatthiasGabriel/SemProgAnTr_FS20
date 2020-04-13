@@ -23,12 +23,12 @@ data $\mathbb{N}$: Set where
 To define a new datatype it is required to specify the name of the type after the keyword \emph{data}.
 Separated by a colon the type of the new datatype is defined - normally this is \emph{Set}.
 \emph{Set} is a special kind of type which is the type of types.
-It is required to specify the type of this new datatype because in Agda every expression has a type \cite{norell:deptyped}.
+It is required to specify the type of this new datatype because in Agda every expression has a type \cite{10.1145/2841316}.
 
-But not every type is of type \emph{Set} because this would lead to nonterminating behaviour, as the type of \emph{Set} would also be \emph{Set}.
+But not every type is of type \emph{Set}. This would lead to non-terminating behaviour, as the type of \emph{Set} would also be \emph{Set}.
 
 Agda instead uses an infinite number of \emph{Set} types, \emph{Set 0}, \emph{Set 1}, \emph{Set 2}, ..., where elements of the next Set are potentially larger.
-The expression \emph{Set n} is of type \emph{Set (n+1)} where \emph{Set n} is a \emph{universe} and n is called \emph{universe level} or \emph{type level} \cite{AgdaReadTheDocs, 10.1145/2841316}.
+The type \emph{Set n} is of type \emph{Set (n+1)} where \emph{Set n} is a \emph{universe} and n is called \emph{universe level} or \emph{type level} \cite{AgdaReadTheDocs, 10.1145/2841316}.
 \emph{Set} without any number as used in the definition of $\mathbb{N}$ is just an abbreviation for \emph{Set 0}.
 
 After this basic definition two different constructors \emph{zero} and \emph{suc} are defined as shown in code snippet \ref{codeSnippet:natural_number}.

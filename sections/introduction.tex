@@ -1,7 +1,5 @@
 \section{Introduction}\label{section:introduction}
 Statically typed programming languages are very popular because they are able to detect various programming errors at compile time.
-\todo{rewrite to be more clear about the history of generics and maybe its relation to lamda calculus}
-\todo{add context about functional programming languages such as haskell}
 The concept of parametric polymorphism is very heavily used in functional languages such as Haskell and with the introduction of type parameters to many different popular programming languages such as Java\footnote{Under the name of Generics in JDK 5 in 2004\cite{JDK5}},
  C\#\footnote{Under the name of Generics in .NET Framework 2.0 in 2005\cite{dotnet20}} or C++\footnote{Under the name of templates} a big improvement of type safety was brought to the mainstream programming languages and has become indispensable.
 
@@ -30,9 +28,10 @@ String e2 = (String)v.get(1); //Type error at compile time
 In Haskell such generic types were built in from the start and are a key features of its type system. The analogy to the Java example is \emph{"test" : 1 : []} which does not compile.
 
 Similarly, the concept of dependent types tries to detect additional programming errors at compile time.
-But instead of depending on types as parameters, it may additionally depend on specific values. 
+But instead of depending on types as parameters, it allows it to additionally depend on specific values. 
 
 The easiest and probably the most understandable usage of dependent types is the extension of a list data type with the length of the list. 
+
 One common runtime error is caused by accessing an invalid list index as shown in code snippet \ref{codeSnippet:array_index_error}.
 
 \begin{codesnippet}[caption={ArrayList index error}, label={codeSnippet:array_index_error}]
@@ -77,6 +76,6 @@ It is not realistic that every software developer will use dependent types, howe
 As the concept of dependent types directly relates to the lambda calculus most of the currently known implementations are found in functional languages.
 In this publication, all concrete code examples are based on Agda, as there are different beginner-friendly tutorials available as well as literature related to dependent types. Amogst others this includes "Dependently Typed Programming in Agda" from Ulf Norell \cite{norell:deptyped}, "Programming Languages Foundations in Agda" from Phil Wadler \cite{plfa2019} as well as "Verified Functional Programming in Agda" from Aaron Stump \cite{10.1145/2841316} on which most of the examples are based\footnote{A comprehensive list can be found in the documentation of Agda \cite{AgdaReadTheDocs}}.
 
-A short introduction to Agda can be found in the following section \ref{section:first_steps_in_agda}.
+An introduction to Agda can be found in the following section \ref{section:first_steps_in_agda}. It includes all concepts and definitions which are required to understand the examples in section \ref{section:dependent_types}.
 
 Basic knowledge of lambda calculus as well as any functional programming language, such as Haskell, is recommended to benefit the most from the following sections.
