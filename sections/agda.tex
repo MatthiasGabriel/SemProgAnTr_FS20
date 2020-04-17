@@ -1,18 +1,18 @@
 \section{First steps in Agda}\label{section:first_steps_in_agda}
-In the following chapter, a brief introduction to Agda is given. If you are experienced in any functional programming, it will be a short read or you might even skip some parts.
+The following chapter gives a brief introduction to Agda. If you are experienced in any functional programming, it will be a short read or you might even skip some parts.
 
 \subsection{Preliminaries}
 Agda is an advanced functional programming language. Its syntax is strongly related to Haskell but it differs concept-wise in some topics. 
 
-One thing to mention is that Agda supports the full Unicode characters in the source code with only a few reserved symbols\footnote{\, . ; \{ \} ( ) @ " are reserved symbols\cite{AgdaReadTheDocsStructure}} 
-and some reserved keywords\footnote{A full list of reserved keywords can be found at \cite{AgdaReadTheDocsStructure}}. 
+It is worth mentioning that Agda supports the full Unicode characters in the source code with only a few reserved symbols\footnote{\, . ; \{ \} ( ) @ " are reserved symbols\cite{AgdaReadTheDocsStructure}.} 
+and some reserved keywords\footnote{A full list of reserved keywords can be found at \cite{AgdaReadTheDocsStructure}.}. 
 Unicode symbols will be used a lot, especially for mathematical symbols.
 
-Another important thing to mention is the integration into emacs, which works as an IDE and supports syntax highlighting as well as many agda specific features some of which are pointed out in this publication.
+Another important thing to mention is the integration into emacs, which works as an IDE and supports syntax highlighting as well as many agda specific features some of which will be pointed out in this publication.
 
 \subsection{Introductory example}\label{section:agda_introduction_example}
 \subsubsection{Datatype Definitions}
-Lets first look at the datatype definition for Peano natural numbers $\mathbb{N}$ shown in code snippet \ref{codeSnippet:natural_number}.
+The first example contains the datatype definition for Peano natural numbers $\mathbb{N}$ shown in code snippet \ref{codeSnippet:natural_number}.
 
 \begin{codesnippet}[mathescape=true, caption={Definition of the peano natural numbers datatype in Agda}, label={codeSnippet:natural_number}]
 data $\mathbb{N}$: Set where
@@ -22,7 +22,7 @@ data $\mathbb{N}$: Set where
 
 To define a new datatype it is required to specify the name of the type after the keyword \emph{data}.
 Separated by a colon the type of the new datatype is defined - normally this is \emph{Set}.
-It is required to specify the type of this new datatype because in Agda every expression has a type \cite{10.1145/2841316}.
+It is required to specify the type of this new datatype since  every expression in Agda has a type \cite{10.1145/2841316}.
 
 After this basic definition two different constructors \emph{zero} and \emph{suc} are defined as shown in code snippet \ref{codeSnippet:natural_number}.
 There is little meaning in this short definition other than elements constructed with these operations are of type $\mathbb{N}$.
@@ -42,7 +42,7 @@ z = suc (suc (suc zero))
 But not every type is of type \emph{Set}. 
 This would lead to non-terminating behaviour, as the type of \emph{Set} would also be \emph{Set}.
 
-Agda instead uses an infinite number of $Set$ types, $Set_0$, $Set_1$, $Set_2$, ..., where elements of the next Set are potentially larger.
+Instead, Agda uses an infinite number of $Set$ types, $Set_0$, $Set_1$, $Set_2$, ..., where elements of the next Set are potentially larger.
 The type $Set_n$ is of type $Set_{(n+1)}$ where $Set_n$ is a \emph{universe} and n is called \emph{universe level} or \emph{type level} \cite{AgdaReadTheDocs, 10.1145/2841316}.
 \emph{Set} without any number as used in the definition of $\mathbb{N}$ is just an abbreviation for $Set_0$. 
 Each set $Set_n$ can also be expressed as \emph{Set n}, which is very common in definitions.
@@ -57,7 +57,7 @@ suc m + n = suc (m + n)
 \end{codesnippet}
 
 Infix operators are functions which can be used in between its arguments in which the underscores determines the place of its arguments.
-Alternativelly it is also possible to call these functions in the normal prefix notation, but in this case the underscores are mandatory\footnote{In case of the \_+\_ the infix call is \emph{n + m} and the equivalent prefix call is $\text{\_+\_}$ \emph{n m}}.
+Alternativelly it is also possible to call these functions in the normal prefix notation, but in this case the underscores are mandatory\footnote{In case of the \_+\_ the infix call is \emph{n + m} and the equivalent prefix call is $\text{\_+\_}$ \emph{n m}.}.
 
 Infix operators are a special case of mixfix operators where the operator is in between the arguments.
 However, mixfix operators are not restricted to two arguments, but allow more complex constructs such as $\text{if\_then\_else\_}$ \cite{AgdaReadTheDocs}.
