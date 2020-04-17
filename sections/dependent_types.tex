@@ -2,7 +2,7 @@
 \subsection{$\Pi$-types}
 The two most common kinds of dependent types are $\Sigma$-types and $\Pi$-types.
 This section covers the basics of $\Pi$-types, which are also used in the first example in section \ref{section_dependent_types_example}. 
-These types are sometimes also called \emph{dependent function types} as in \cite{10.1145/2841316} or \emph{dependent product type} as in \cite{10.5555/1076265}. 
+These types are sometimes also called \emph{dependent function types} as in \cite{10.1145/2841316} or \emph{dependent product types} as in \cite{10.5555/1076265}. 
 Be aware that the name dependent product type can also be used for $\Sigma$-types as in \cite{10.1145/2841316}.
 
 In the introduction in section \ref{section:introduction} the concept of an enhanced list, where the length is a part of the type, was introduced.
@@ -165,7 +165,7 @@ Because the recursion happens on the second argument it is no longer possible fo
 \begin{codesnippet}[mathescape=true, caption={Proof of addition of zero in Agda}, label={codeSnippet:x_plus_zero_agda}]
 x+0 : $\forall$ (x : $\mathbb{N}$) $\rightarrow$ x + zero $\equiv$ x
 x+0 zero = refl
-x+0 suc(a) rewrite x+0 a = refl
+x+0 (suc a) rewrite x+0 a = refl
 \end{codesnippet}
 
 As shown in code snippet \ref{codeSnippet:x_plus_zero_agda} it is possible to pattern match in proofs as proofs are programms.
