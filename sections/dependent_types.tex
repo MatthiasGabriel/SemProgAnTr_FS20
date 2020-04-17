@@ -1,55 +1,56 @@
 \section{Dependent Types}\label{section:dependent_types}
-\subsection{Introduction to dependent types}
-There are different kinds of dependent types. The two most common ones are $\Sigma$-types and $\Pi$-types.
-The first focus lies on the $\Pi$-types, which are also used in the first example in section \ref{section_dependent_types_example}. These types are sometimes also called \emph{dependent function types} as in \cite{10.1145/2841316} or \emph{dependent product type} as in \cite{10.5555/1076265}. Be aware that the name dependent product type can also be used for $\Sigma$-types as in \cite{10.1145/2841316}.
+\subsection{$\Pi$-types}
+The two most common kinds of dependent types are $\Sigma$-types and $\Pi$-types.
+This section covers the basics of $\Pi$-types, which are also used in the first example in section \ref{section_dependent_types_example}. 
+These types are sometimes also called \emph{dependent function types} as in \cite{10.1145/2841316} or \emph{dependent product type} as in \cite{10.5555/1076265}. 
+Be aware that the name dependent product type can also be used for $\Sigma$-types as in \cite{10.1145/2841316}.
 
 In the introduction in section \ref{section:introduction} the concept of an enhanced list, where the length is a part of the type, was introduced.
 This data structure is in the literature often called vector \cite{10.1145/2841316} \cite{10.5555/1076265}.
-This new data structure is not a simple type but maps an input of type \emph{Nat} to a specific type. To differentiate between such as structure and types the term \emph{type family} is used as suggested by Aspinall and Hofmann in \cite{10.5555/1076265}.
+This new data structure is not a simple type but maps an input of type \emph{Nat} to a specific type. 
+To differentiate between such as structure and types the term \emph{type family} is used as suggested by Aspinall and Hofmann in \cite{10.5555/1076265}.
 
 $$Vector :: Nat \rightarrow *$$
 
-The type which contains vectors of length \emph{k} can be constructed by applying \emph{k} to \emph{Vector} or in other terms \emph{Vector k}.
+The type which contains vectors of length \emph{k} can be constructed by applying \emph{k} to \emph{Vector} or in another representation \emph{Vector k}.
 
-To construct new Vectors two constructors are needed. 
-One which constructs an empty vector and one to add new elements to the vector. 
-This pattern should be familiar for everyone that is used to functional programming so far.
+Two constructors are necessary to construct new vectors.
+One that constructs an empty vector and one that adds new elements to the vector. 
+This pattern should be familiar to anyone familiar with functional programming.
 
-The second constructor \emph{cons} takes one element \emph{n} of type \emph{Nat}, an element of type \emph{data} as well as a vector with the length \emph{n} and returns a new vector of length \emph{n+1}. 
-The length of the returned vector is increased by one to account for the new element that is added.
+The second constructor \emph{cons} takes one element \emph{n} of type \emph{Nat}, an element of type \emph{data}, as well as a vector of length \emph{n} and returns a new vector of length \emph{n+1}. 
+The increased length of the returned vector accounts for the added element.
 
 $$empty: Vector \, 0$$
-$$cons : \Pi n : Nat. \, data \rightarrow Vector \, n \rightarrow Vector \, (n+1)$$
+$$cons : \Pi n : Nat. \, \text{ } data \rightarrow Vector \, n \rightarrow Vector \, (n+1)$$
 
-Dependent function types can be described as $\Pi \text{x:A. B}$ where x is of type A and can be used to define B. 
-This is the generalization of the arrow type used in simply typed lambda-calculus which means that every arrow type can also be expressed as a $\Pi$-type.
+Dependent function types can be described as $\Pi \text{x:A. B}$ where \emph{x} is of type \emph{A} and can be used to define \emph{B}. 
+This is the generalization of the arrow type used in simply typed lambda-calculus which means that every arrow type can also be expressed as a $\Pi$-type, where \emph{x} is not used to define the type \emph{B}.
 
 $$A \rightarrow B \, = \, \Pi \text{x:A. B}$$
 $$where \, x \, does \, not \, appear \, free \, in \, B$$
 
-Another description of the $\Pi$-type is the following. A function maps an element $a \in A$ to a new element $b \in B_a$. 
+An alternative description of the $\Pi$-type is the following: A function maps an element $a \in A$ to a new element $b \in B_a$. 
 This is also called type B is indexed by type A \cite{10.1145/2841316}.
 
-\todo{Extend this with relation to Curry-Howard Isomorphism/Correspondence as universal quantification}
-
-The additional information that is encoded in the type can be exploited whenever such a type is used. 
+This additional type-information, can be exploited whenever such a type is used. 
 Consider a first example, where the function \emph{head} is defined, which returns the first element of a vector.
 
 $$head : \Pi n : Nat.Vector(n+1) \rightarrow data$$
 
-In contradiction to lists, it is now possible to specify that only non-empty vectors can be be used as an argument. 
-This is archived by specifying an type variable \emph{n} of type \emph{Nat} and only accepting vectors of length \emph{n+1}.
-As the smallest possible natural number is 0, vectors of length 1 are the smallest accepted vectors.
+In opposition to lists, it is now possible to specify that only non-empty vectors are valid arguments. 
+This is archived by specifying a type variable \emph{n} of type \emph{Nat} and only accepting vectors of length \emph{n+1}.
+As the smallest possible natural number is zero, the smallest vectors are of length one.
 
-This simplifies the implementation of \emph{head} and also each usage of \emph{head} as no exception handling for the empty data structure is necessary. 
-If the function can be called with a specific instance then it is guaranteed by the type system that an instance of data is returned.
+This simplifies the implementation of \emph{head} and also each usage of \emph{head}, as exception handling for the empty data structure is no longer necessary. 
+If it is possible to call the function with a specific list, the type system guarantees that the function returns an instance of data.
 
-To be more clear what this means in practice lets consider a few examples in Agda.
+To give additional insights about the usage of $\Pi$-types and its impact, the following section contains some simple examples in Agda.
 
 \subsection{$\Pi$-Types in Agda}\label{section_dependent_types_example}
-In this section, the first dependent datatype in Agda, the vector, will be defined.
+In this section, the vector datatype will be defined in Agda.
 
-It is essentially a list but in contrast to the list datatype defined in section \ref{section:agda_introduction_example} the length of the list is a part of the type.
+It is essentially a list, but in contrast to the list datatype defined in section \ref{section:agda_introduction_example}, the type contains the size of the data structure.
 
 In addition to the implicit type-level and the type A, an additional parameter of type $\mathbb{N}$ is defined in the type definition as shown in code snippet \ref{codeSnippet:vector_datatype}.
 
@@ -61,14 +62,14 @@ data $\mathbb{V}$ {$\ell$} (A : Set $\ell$) : $\mathbb{N}$ $\rightarrow$ Set $\e
 \end{codesnippet}
 
 There is a difference between \emph{parameters}, used before the colon, and \emph{indices} of a datatype.
-The datatype $\mathbb{V}$ is parameterised by a type A and indexed over $\mathbb{N}$\cite{norell:deptyped}.
-Parameters are required to be exactly the same for each constructor of a datatype, however, indicies can vary.
+The datatype $\mathbb{V}$ is parameterised by a type \emph{A} and indexed over $\mathbb{N}$\cite{norell:deptyped}.
+Parameters are required to be exactly the same for all constructors of a datatype, however, indicies can vary.
 
-The first constructor for the empty vector sets the length of the vector to the fixed value zero of $\mathbb{N}$ because it is known that the list is currently empty and the length is therefore 0.
-The second constructor is used to add new elements to an existing vector. It takes two arguments one of type A and one of type $\mathbb{V}$ A n similar to the list but additionally it determines the implicit argument n of type $\mathbb{N}$ from the input vector.
-This parameter is then used to define the return type. As exactly one new element is added to the existing list of type $\mathbb{V}$ A n it is known that the new type has to be $\mathbb{V}$ A (suc n).
+The first constructor, the empty vector, sets the length of the vector to the fixed value zero because the list is empty and therefore the length is zero.
+The second constructor is used to add new elements to an existing vector. It takes two arguments one of type \emph{A} and one of type \emph{$\mathbb{V}$ A n}, similar to the list, but additionally it determines the implicit argument \emph{n} of type $\mathbb{N}$ based on the input vector.
+This parameter is then used to define the return type. As exactly one new element is added to the existing list of type \emph{$\mathbb{V}$ A n} the new type has to be \emph{$\mathbb{V}$ A (suc n)}.
 
-Appending two vectors - as seen in code snippet \ref{codeSnippet:vector_append} - is a mix between the appending of two lists and the datatype definition of the vector and relatively straightforward.
+Appending two vectors, as seen in code snippet \ref{codeSnippet:vector_append}, is a mix between appending two lists and the datatype definition of the vector and relatively straightforward.
 
 \begin{codesnippet}[mathescape=true, caption={Definition of the vector append function in Agda}, label={codeSnippet:vector_append}]
 _++$\mathbb{V}$_ : $\forall$ {$\ell$} {A : Set $\ell$}  {n m: $\mathbb{N}$ $\rightarrow$
@@ -79,17 +80,18 @@ _++$\mathbb{V}$_ : $\forall$ {$\ell$} {A : Set $\ell$}  {n m: $\mathbb{N}$ $\rig
 
 To prevent a naming conflict between the append operators of lists and vectors the unique name \_++$\mathbb{V}$\_ was chosen.
 
-It is important, that the types of these two vectors does not need to be equal, as the parameters n and m of type $\mathbb{N}$, which are also a part of the types, can have different values. 
-Nevertheless the elements contained in both vectors are still required to be of type A.
+The types of these two vectors do not need to be equal. 
+More specifically, the parameters \emph{n} and \emph{m} of type $\mathbb{N}$, which are also a part of the types, can have different values. 
+Nevertheless it is still required that all elements contained in both vectors are of type \emph{A}.
 
-It can be deduced that the newly constructed vector has the type $\mathbb{V}$ A (n + m).
+With this information, it is possible to deduce that the newly constructed vector has the type \emph{$\mathbb{V}$ A (n + m)}.
 
 The next example will present the first benefit of including the length in the datatype.
-In case of the list datatype $\mathbb{L}$, it was required to define an additional helper datatype \emph{maybe} as described in section \ref{section:agda_introduction_example} when implementing the \emph{nth} function.
-Additionally, whenever a programmer uses the function, he has to think of the different cases \emph{nothing} or \emph{just} and adjust his functionality. This is done with additional pattern matching.
+In case of the list datatype $\mathbb{L}$, it is required to define the additional helper datatype \emph{maybe} as described in section \ref{section:agda_introduction_example} when implementing the \emph{nth} function.
+Additionally, whenever a programmer uses the function, he has to think of the different cases \emph{nothing} or \emph{just} and adjust the functionality, usually by introducing additional pattern matching. 
 
 The same restrictions are met by the \emph{head} function of a $\mathbb{L}$. 
-However, the \emph{head} function of $\mathbb{V}$ shown in code snippet \ref{codeSnippet:vector_head} always returns a single object of type A.
+However, the \emph{head} function of $\mathbb{V}$ shown in code snippet \ref{codeSnippet:vector_head} is guaranteed to return a single object of type \emph{A}.
 
 \begin{codesnippet}[mathescape=true, caption={Definition of $head\mathbb{V}$ function in Agda}, label={codeSnippet:vector_head}]
 head$\mathbb{V}$ : $\forall$ {$\ell$} {A : Set $\ell$} {n : $\mathbb{N}$} $\rightarrow$ 
@@ -97,16 +99,18 @@ head$\mathbb{V}$ : $\forall$ {$\ell$} {A : Set $\ell$} {n : $\mathbb{N}$} $\righ
 head$\mathbb{V}$ (x :: _) = x
 \end{codesnippet}
 
-This is possible by using the additional information of the implicit parameter \emph{n} of type $\mathbb{N}$, respectivelly by restricting the input vector to the type $\mathbb{V}$ A suc(n).
-Elements of this type are known to have a least one entry, in this case the implicit parameter would be zero.
+This is possible by using the additional information of the implicit parameter \emph{n} of type $\mathbb{N}$, respectivelly by restricting the input vector to the type \emph{$\mathbb{V}$ A suc(n)}.
+Elements of this type have a least one entry, in the case that the implicit parameter \emph{n} is zero.
 
-It is possible to define the \emph{head} without specificing a pattern for the empty vector [] as the type checker can infer that this case is not possible.
+It is possible to define the \emph{head} without specificing a pattern for the empty vector [], as the type checker can infer that this case is not possible.
 Whenever a particular case is type correct it is necessary to include it, otherwise it needs to be omitted \cite{norell:deptyped}.
 
 \subsection{Proofs as programs}\label{section:agda_proofs}
-In this section a small introduction to \emph{Propositions as Types}\cite{10.1145/2699407} will be given together with a few examples in Agda. \emph{Proposition as Types} is also known under the names \emph{Curry-Howard Correspondence}\cite{10.5555/1076265} and \emph{Curry-Howard Isomorphism}\cite{10.1145/2841316} and many more.
+In this section a small introduction to \emph{Propositions as Types}\cite{10.1145/2699407} will be given, together with a few examples in Agda. 
+\emph{Proposition as Types} is also known under the names \emph{Curry-Howard Correspondence}\cite{10.5555/1076265} and \emph{Curry-Howard Isomorphism}\cite{10.1145/2841316} and many more.
 
-Under all this different names the same interlinking between logic and programming is understood. There are three main statements of interest, pointed out by Wadler in \cite{10.1145/2699407}.
+All this different name describe the interlinking between logic and programming.
+There are three main statements of interest, pointed out by Wadler in \cite{10.1145/2699407}.
 
 \emph{Propositions as types} states that each proposition in a logic has a corresponding type in the programming world and the other way around. 
 
@@ -114,36 +118,36 @@ Under all this different names the same interlinking between logic and programmi
 
 \emph{Simplification of proofs as evaluation of programs} states that for every step in simplification of a proof there is an operation how to evaluate the corresponding program.
 
-This allows it that proofs can be directly represented in the programming language.
+This enables the representation of propositions and corresponding proofs directly in the programming language.
 
 \subsubsection{Proofs as programs in Agda}
-Lets now consider a first small example in Agda.
-
-In Agda it is possbile to define propositional equalities such as $zero + suc(zero) \equiv suc(zero)$. The type of this term is \emph{Set} which is the type of types.
+In Agda it is possbile to define propositional equalities such as $zero + suc(zero) \equiv suc(zero)$. The type of this expression is \emph{Set}, which is the type of types.
 This was the first application of propositions as types.
-However this proposition is not proved yet. It is also possible to state false propositions such as $zero + suc(zero) \equiv zero$ without any compiler errors.
+However this proposition is not proved yet.
+It is also possible to state wrong propositions such as $zero + suc(zero) \equiv zero$ without any compiler errors.
 
 To prove this proposition a program of the type $zero + suc(zero) \equiv suc(zero)$ has to be implemented.
-As a start a useful name has to be considered. Agda is very liberal in terms of naming and even the previously defined operators can be used to define names. Possible examples for name of the proof include $\text{1+0=1}$ or $zeroAddition$.
+As a start a useful name has to be considered and the corresponding type assigned.
+Agda is very liberal in terms of naming and even the previously defined operators can be used to define names.
+Possible examples for a name of the proof include $\text{0+1=1}$ or $zeroAddition$.
 
 $$\text{0+1=1} : zero + suc(zero) \equiv suc(zero)$$
 
 Agda is able to simplify this type to $suc(zero) \equiv suc(zero)$ because $suc(zero) + zero$ is definitionally equal to $suc(zero)$. Definitionally equal means that Agda is able to simplify both terms to the same value and they are therefore interchangable.
-The proof is simple as both sides are equal. 
-Agda needs the hint by using the value $refl$, which means reflexivity and requires both sides of the $\equiv$ operator to be definitionally equal.
+The proof is very simple as both sides are equal. 
+Agda just requires a small hint, by assigning the value $refl$, which means reflexivity and requires both sides of the $\equiv$ operator to be definitionally equal.
 
 $$\text{0+1=1} = refl$$
 
 If the program gets typechecked successfully, the proof is completed.
 
-This proof is very specific to these values, similiar to a single test case.
+This proof is specific to the values \emph{zero} and \emph{suc(zero)}, similiar to a single test case.
 But in combination with a dependent function type it is possible to extend this proof to any Peano number $\mathbb{N}$. 
-To do this the universal quantifier $\forall$, which is also common in mathematics, is used.
-It allows it to state that the following property should hold for every possible assignment\cite{plfa2019}.
-The $\forall$ symbol is one of the few reserved keywords in Agda.
+To do this the universal quantifier $\forall$, which is also common in mathematics, is used\footnote{The $\forall$ symbol is one of the few reserved keywords in Agda.}.
+It allows to state that the specified property should hold for every possible assignment\cite{plfa2019}.
 
-The new proposition in code snippet \ref{codeSnippet:zero_plus_x_agda} is now a little more complex but still comprehensible. 
-It states that for every x of type $\mathbb{N}$ the following equivalence holds. 
+The new proposition in code snippet \ref{codeSnippet:zero_plus_x_agda} is a little more complex but still comprehensible. 
+It states that for every \emph{x} of type $\mathbb{N}$ the specified equivalence holds. 
 Because a variable \emph{x} is defined in the type, the program requires an input argument.
 In this code snippet this argument gets assigned to the variable \emph{a}.
 
@@ -154,7 +158,7 @@ In this code snippet this argument gets assigned to the variable \emph{a}.
 
 As the first constructor of the addition of $\mathbb{N}$ is $zero + n = n$ refl is the proof.
 
-If the addition happens in a different order and \emph{zero} gets added to \emph{x}, as shown in code snippet \ref{codeSnippet:x_plus_zero_agda}, the proof gets yet a little bit more complicated. 
+If the addition happens in a different order and \emph{zero} gets added to \emph{x}, as shown in code snippet \ref{codeSnippet:x_plus_zero_agda}, the proof is again a little bit more complicated. 
 The reason for this lies in the definition of addition.
 Because the recursion happens on the second argument it is no longer possible for Agda to determine that these terms are definitionally equal and requires the programmer to add additional hints to be able to prove the equality.
 
@@ -167,22 +171,21 @@ x+0 suc(a) rewrite x+0 a = refl
 As shown in code snippet \ref{codeSnippet:x_plus_zero_agda} it is possible to pattern match in proofs as proofs are programms.
 For the base case \emph{zero + zero $\equiv$ zero}, \emph{refl} is still enough but on the case where \emph{a} is not \emph{zero} but \emph{suc(x)}, the \emph{rewrite} directive is required.
 
-The \emph{rewrite} directive can be used to transform parts of the original problem. If a proof A $\equiv$ B exists, then \emph{rewrite} will replace A with B in the instantiated type.
+The \emph{rewrite} directive can be used to transform parts of the original problem. If a proof \emph{A $\equiv$ B} exists, then \emph{rewrite} will replace \emph{A} with \emph{B} in the instantiated type.
 
-But how does this really work?
-The original proof is $x + zero \equiv x$ where x is instantiated with \emph{suc(a)} or more precisely $suc(a) + zero \equiv suc(a)$.
+The following method of proof is called proof by induction in mathematics and is very common.
+The original proof is $x + zero \equiv x$ where \emph{x} is instantiated with \emph{suc(a)} or more precisely $suc(a) + zero \equiv suc(a)$.
 As $suc(a) + zero$ is definitionally equal to $suc(a + zero)$ regarding the second constructor of addition in code snippet \ref{codeSnippet:natural_number_addition}, this can also be written as $suc(a + zero) \equiv suc(a)$.
 
 If the proof that $a + 0 \equiv a$ gets applied to this, the result will be the desired $suc(a) \equiv suc(a)$. 
 To get the proof $a + 0 \equiv a$ \emph{x+0} gets called recursively on $a$ instead of $suc(a)$
 
-This kind of proof is called proof by induction in mathematics and is actually very common.
 The important thing to remember, as in every recursion, is that a base case as well as partial solution step are required.
 
 \subsubsection{Proofs as arguments}
 
-Similar to \emph{head$\mathbb{V}$} the function \emph{nth$\mathbb{V}$} in code snippet \ref{codeSnippet:vector_nth} has an implicit parameter m of type $\mathbb{N}$ which represents the length of the input vector. 
-However, it contains an additional explicit parameter, which is a proof that n is less than m.
+Similar to \emph{head$\mathbb{V}$} the function \emph{nth$\mathbb{V}$} in code snippet \ref{codeSnippet:vector_nth} has an implicit parameter \emph{m} of type $\mathbb{N}$ which represents the length of the input vector. 
+However, it contains an additional explicit parameter, which is a proof that \emph{n} is less than \emph{m}.
 
 \begin{codesnippet}[mathescape=true, caption={Definition of \emph{nth} function in Agda}, label={codeSnippet:vector_nth}]
 nth$\mathbb{V}$ : $\forall$ {$\ell$} {A : Set $\ell$} {m : $\mathbb{N}$} $\rightarrow$
@@ -193,22 +196,22 @@ nth$\mathbb{V}$ (suc n) () []
 nth$\mathbb{V}$ zero () []
 \end{codesnippet}
 
-The base case of the \emph{nth$\mathbb{V}$} recursive function is at line 3. It states that if the element at index 0 is wanted, the head of the list is returned.
+The base case of the \emph{nth$\mathbb{V}$} recursive function is at line three. It states that if the element at index zero is wanted, the first element of the list is returned.
 To indicate that the proof, that zero is smaller than length of the vector, as well as the tail of the vector are not used in the definition of the function they are replaced by an \_.
 
-At line 4 the recursive case is defined which calls \emph{nth$\mathbb{V}$} but with the predecessor of n and the tail of the current vector.
-The second argument \emph{p}, which contains the proof that $suc(n)$ is smaller than the length of the vector, is directly passed into the new function call. 
-At first glance, this might look a little bit unusual. 
-It is possible because, both the index as well as the length of the new vector \emph{xs} are decreased by exactly one, the proof still holds.
+At line four the recursive case is defined which calls \emph{nth$\mathbb{V}$}, but with the predecessor of \emph{n} and the tail of the current vector.
+The second argument \emph{p}, which contains the proof that \emph{suc(n)} is smaller than the length of the vector, is directly passed into the new function call. 
+At first glance, the reuse of the proof \emph{p} might look unusual. 
+This is possible because the index as well as the length of the new vector \emph{xs} are decreased by exactly one.
 The proof \emph{p} is still valid as \emph{suc n $<$ suc m $\equiv$ true} and \emph{n $<$ m $\equiv$ true} are definitionally equal.
 
 The last two lines look quite different than any of the definitions before.
-Because it is not possible to prove that \emph{suc n $<$ m $\equiv$ true} where m is the length of the empty list, or more concretely zero, the so-called absurd pattern can be used. 
-This basically tells Agda that this case can never be reached and therefore no definition for this case has to exist.
-The last line is required lies in the definition of \_$<$\_ of $\mathbb{N}$ shown in code snippet \ref{codeSnippet:natural_number_less_than}.
-Because in that definition a case distinction between $0 < 0$ and $\text{(suc x)} < 0$ was made, the last line, which proves that \emph{zero $<$ zero $\equiv$ true} is false, is required as well.
+Because it is not possible to prove that \emph{suc n $<$ m $\equiv$ true} where \emph{m} is the length of the empty list, or more concretely zero, the so-called absurd pattern can be used. 
+This tells Agda that this case can never be reached and therefore no definition for this case has to be implemented.
+The reason why the last line is required, lies in the definition of \_$<$\_ of $\mathbb{N}$ shown in code snippet \ref{codeSnippet:natural_number_less_than}.
+Because in that definition a case distinction between $0 < 0$ and $\text{(suc x)} < 0$ was made, the last line, which proves that \emph{zero $<$ zero $\equiv$ true} is \emph{false}, is required as well.
 
-Whenever the function \emph{nth$\mathbb{V}$} is called, a proof that m $<$ n is equivalent to \emph{true} is required as shown in code snippet \ref{codeSnippet:vector_nth_usage}. This can easily be done by using refl.
+Whenever the function \emph{nth$\mathbb{V}$} is called, a proof that \emph{m $<$ n} is equivalent to \emph{true} is required as shown in code snippet \ref{codeSnippet:vector_nth_usage}. This can easily be done by using refl.
 
 \begin{codesnippet}[mathescape=true, caption={Usage of \emph{nth} function in Agda}, label={codeSnippet:vector_nth_usage}]
 testVector = false :: false :: []
@@ -218,23 +221,27 @@ invalid_element = nth$\mathbb{V}$ (suc(suc zero))
                   refl testVector
 \end{codesnippet}
 
-The code snippet \ref{codeSnippet:vector_nth_usage} will not compile, as the proof refl in the call on the last line is invalid, as \emph{suc(suc zero) $<$ suc(suc zero) $\equiv$ false}.
+The code snippet \ref{codeSnippet:vector_nth_usage} will not compile, as the proof \emph{refl} in the call on the last line is invalid, as \emph{suc(suc zero) $<$ suc(suc zero) $\equiv$ false}.
 
 \subsection{$\Sigma$-types}
-In addition to $\Pi$-types, there exists a second important class of dependent types. 
-The $\Sigma$-types also called \emph{dependent product types}\cite{10.1145/2841316},\emph{dependent pair types}\cite{10.1145/2841316} or \emph{dependent sum types}\cite{10.5555/1076265}.
+In addition to $\Pi$-types, there is a second important kind of dependent types. 
+The $\Sigma$-types or also called \emph{dependent product types}\cite{10.1145/2841316},\emph{dependent pair types}\cite{10.1145/2841316} or \emph{dependent sum types}\cite{10.5555/1076265}.
 
-The $\Sigma$-type is the generalization of the ordinary Cartesian product type $A \times B$. 
-It is a combination of two types where each element of this type is a pair. 
-But the type of the second element may depend on the value of the first element.
+The $\Sigma$-type is the generalization of the Cartesian product type $A \times B$ and is written as $\Sigma x:A. \, B$ where \emph{A} is the type of \emph{x} and \emph{x} can be used to define the type \emph{B}.
 
-$$\Sigma x: A.B \,= \, A \times B$$
+Every Cartesian product type can be expressed as a $\Sigma$-type.
+
+$$A \times B \,= \,\Sigma x:A. \, B$$
 $$where \, x \, does \, not \, appear \, free \, in \, B$$
+
+It is a combination of two types where each element of this type is a pair consisting of two elements of type \emph{A} and \emph{B} respectively.
+But additionally the type of the second element may depend on the value of the first element.
 
 Another good description of the $\Sigma$-type is the following. 
 Elements of the type are pairs $(a, b)$ under the condition that $a \in A$ and $b \in B_a$.
 
-Dependent $\Sigma$-types are often used to express an element with a certain property and its corresponding proof.
+Dependent $\Sigma$-types are often used to express an element with a certain property and the corresponding proof.
+This is due to the fact that propositions, which are the type of the proofs, often requires the element.
 
 In contrast to $\Pi$-types which can be used to express universal quantification, $\Sigma$-types can be used to express existential quantification \cite{plfa2019}.
 
@@ -244,21 +251,14 @@ As the implementation of $\Sigma$ in codesnippet \ref{codeSnippet:sigma} shows, 
 The simplest example for $\Sigma$-types in Agda is the type of nonzero Peano numbers.
 It is directly based on the Peano numbers $\mathbb{N}$ defined in section \ref{section:agda_introduction_example}.
 
-The definition of $\mathbb{N}^+$ states that each element is a pair of a Peano number combined with the proof that this specific number applied to the \emph{iszero} function returns false.
+The definition of $\mathbb{N}^+$ in code snippet \ref{codeSnippet:nonzero_natural_number} states that each element is a pair of a Peano number combined with the proof that this specific number applied to the \emph{iszero} function returns \emph{false}.
 
 \begin{codesnippet}[mathescape=true, caption={Definition of nonzero Peano numbers in Agda}, label={codeSnippet:nonzero_natural_number}]
 $\mathbb{N}^+$ : Set
 $\mathbb{N}^+$ = $\Sigma$ $\mathbb{N}$ ($\lambda$ n $\rightarrow$ iszero n $\equiv$ false)
 \end{codesnippet}
 
-The $\Sigma$ used in code snippet \ref{codeSnippet:nonzero_natural_number} from IAL is a simplification of the one defined in the standard library of Agda and only consists of three lines shown in code snippet \ref{codeSnippet:sigma}.
-
-The $\Sigma$ type constructor takes two explicit and two implicit arguments. 
-The first type argument is the type A of level $\ell$, the second type argument is a function of type B which takes an element of A and returns a new type of level $\ell '$.
-The type level of $\Sigma$ will be at $\ell$ $\sqcup$ $\ell '$. The operator $\sqcup$ is part of Agda's primitive level system and takes the higher of the two input levels.
-
-The constructor for new elements of type $\Sigma$ is a single comma, which allows it to express $\Sigma$ elements as pairs.
-The  usage of the variable a of type A in the type definition of b shows the direct dependence of the second component to the value of the first component.
+The $\Sigma$ used in code snippet \ref{codeSnippet:nonzero_natural_number} from IAL is a simplification of the one defined in the standard library of Agda and only consists of three lines and is shown in code snippet \ref{codeSnippet:sigma}.
 
 \begin{codesnippet}[mathescape=true, caption={Definition of $\Sigma$ in Agda}, label={codeSnippet:sigma}]
 data $\Sigma$ {$\ell$ $\ell '$} (A : Set $\ell$) (B : A $\rightarrow$ Set $\ell '$)
@@ -266,14 +266,21 @@ data $\Sigma$ {$\ell$ $\ell '$} (A : Set $\ell$) (B : A $\rightarrow$ Set $\ell 
 _,_ : (a : A) $\rightarrow$ (b : B a) $\rightarrow$ $\Sigma$ A B
 \end{codesnippet}
 
+The $\Sigma$ type constructor takes two explicit and two implicit arguments. 
+The first type argument is the type \emph{A} of level $\ell$, the second type argument is a function of type \emph{B} which takes an element of \emph{A} and returns a new type of level $\ell '$.
+The type level of $\Sigma$ will be at $\ell$ $\sqcup$ $\ell '$. The operator $\sqcup$ is part of Agda's primitive level system and takes the higher of the two input type levels.
+
+The constructor for new elements of type $\Sigma$ is a single comma, which allows it to express $\Sigma$ elements as pairs.
+The usage of the variable \emph{a} of type \emph{A} in the type definition of \emph{b} shows the dependence of the second component to the value of the first component.
+
 Code snippet \ref{codeSnippet:nonzero_natural_number_suc} contains the successor function of $\mathbb{N}^+$ which returns the next nonzero Peano number.
-As an input argument, the function takes an element of $\mathbb{N}^+$ and returns a new element $\mathbb{N}^+$. 
-With pattern matching the element of $\mathbb{N}^+$ is disassembled into the number x and the proof p as defined in code snippet \ref{codeSnippet:nonzero_natural_number}.
-
-The return value is constructed by applying the function \emph{suc} to the variable x as the first part of the pair and the \emph{refl} proof as the second part of the pair.
-Agda can prove that \emph{iszero (suc x)} is always false and therefore the proof is as simple as refl.
-
 \begin{codesnippet}[mathescape=true, caption={Successor of $\mathbb{N}^+$}, label={codeSnippet:nonzero_natural_number_suc}]
 suc$^+$ : $\mathbb{N}^+$ $\rightarrow$ $\mathbb{N}^+$
 suc$^+$ (x, p) = (suc x, refl)
 \end{codesnippet}
+
+As an input argument, the function takes an element of $\mathbb{N}^+$ and returns a new element $\mathbb{N}^+$. 
+With pattern matching the element of $\mathbb{N}^+$ is disassembled into the number \emph{x} and the proof \emph{p} as defined in code snippet \ref{codeSnippet:nonzero_natural_number}.
+
+The return value is constructed by applying the function \emph{suc} to the variable \emph{x} as the first part of the pair and the \emph{refl} proof as the second part of the pair.
+Agda can prove that \emph{iszero (suc x)} is always false and therefore the proof is as simple as refl.

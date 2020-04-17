@@ -22,15 +22,7 @@ data $\mathbb{N}$: Set where
 
 To define a new datatype it is required to specify the name of the type after the keyword \emph{data}.
 Separated by a colon the type of the new datatype is defined - normally this is \emph{Set}.
-\emph{Set} is a special kind of type which is the type of types.
 It is required to specify the type of this new datatype because in Agda every expression has a type \cite{10.1145/2841316}.
-
-But not every type is of type \emph{Set}. This would lead to non-terminating behaviour, as the type of \emph{Set} would also be \emph{Set}.
-
-Agda instead uses an infinite number of $Set$ types, $Set_0$, $Set_1$, $Set_2$, ..., where elements of the next Set are potentially larger.
-The type $Set_n$ is of type $Set_(n+1)$ where $Set_n$ is a \emph{universe} and n is called \emph{universe level} or \emph{type level} \cite{AgdaReadTheDocs, 10.1145/2841316}.
-\emph{Set} without any number as used in the definition of $\mathbb{N}$ is just an abbreviation for $Set_0$. 
-Each set $Set_n$ can also be expressed as \emph{Set n} which is very common in definitions.
 
 After this basic definition two different constructors \emph{zero} and \emph{suc} are defined as shown in code snippet \ref{codeSnippet:natural_number}.
 There is little meaning in this short definition other than elements constructed with these operations are of type $\mathbb{N}$.
@@ -45,6 +37,16 @@ y = suc zero
 z = suc (suc (suc zero))
 \end{codesnippet}
 
+\subsubsection{Type levels}
+\emph{Set} is a special kind of type which is the type of types.
+But not every type is of type \emph{Set}. 
+This would lead to non-terminating behaviour, as the type of \emph{Set} would also be \emph{Set}.
+
+Agda instead uses an infinite number of $Set$ types, $Set_0$, $Set_1$, $Set_2$, ..., where elements of the next Set are potentially larger.
+The type $Set_n$ is of type $Set_{(n+1)}$ where $Set_n$ is a \emph{universe} and n is called \emph{universe level} or \emph{type level} \cite{AgdaReadTheDocs, 10.1145/2841316}.
+\emph{Set} without any number as used in the definition of $\mathbb{N}$ is just an abbreviation for $Set_0$. 
+Each set $Set_n$ can also be expressed as \emph{Set n}, which is very common in definitions.
+
 \subsubsection{Mixfix Operators}
 Addition of Peano numbers can be defined in a very elegant way as an infix operator as shown in code snippet \ref{codeSnippet:natural_number_addition}.
 
@@ -55,12 +57,12 @@ suc m + n = suc (m + n)
 \end{codesnippet}
 
 Infix operators are functions which can be used in between its arguments in which the underscores determines the place of its arguments.
-Alternativelly it is also possible to call these functions in the normal prefix notation, but in this case the underscores are mandatory\footnote{In case of the \_+\_ the infix call is $n + m$ and the equivalent prefix call is $\text{\_+\_} n m$}.
+Alternativelly it is also possible to call these functions in the normal prefix notation, but in this case the underscores are mandatory\footnote{In case of the \_+\_ the infix call is \emph{n + m} and the equivalent prefix call is $\text{\_+\_}$ \emph{n m}}.
 
 Infix operators are a special case of mixfix operators where the operator is in between the arguments.
 However, mixfix operators are not restricted to two arguments, but allow more complex constructs such as $\text{if\_then\_else\_}$ \cite{AgdaReadTheDocs}.
 
-To be able to use multiple infix operators in the same expression it is necessary to specify the precedence of these.
+To be able to use multiple infix operators in the same expression it is necessary to specify different precedences.
 With the three different keywords \emph{infix}, \emph{infixr} and \emph{infixl} the precedence as well as the associativity of the operator can be defined\footnote{The precendence factor defaults to 20 and can also be negative.}.
 
 \begin{codesnippet}[mathescape=true, caption={Precedence and associativity of some Peano number operators}, label={codeSnippet:natural_number_precedence}]
@@ -81,7 +83,7 @@ _<_ : $\mathbb{N} \rightarrow \mathbb{N} \rightarrow \mathbb{B}$
 The \_\textless\_ function follows the same structure as the \_+\_ function, but includes four different pattern matching cases. 
 This might not be the smallest possible definition possible but it is very precise and comprehensible.
 
-The boolean datatype $\mathbb{B}$ consists of two constructors \emph{true} and \emph{false} is shown in code snippet \ref{codeSnippet:boolean} for completeness.
+The boolean datatype $\mathbb{B}$ consists of two constructors \emph{true} and \emph{false} and is shown in code snippet \ref{codeSnippet:boolean} for completeness.
 
 \begin{codesnippet}[mathescape=true, caption={Definition of the boolean datatype in Agda}, label={codeSnippet:boolean}]
 data $\mathbb{B}$ : Set where
@@ -91,7 +93,7 @@ data $\mathbb{B}$ : Set where
 
 \subsubsection{Type Parameters}
 The definition of the list datatype as seen in code snippet \ref{codeSnippet:list_datatype} is more complex than the previous datatype definitions of $\mathbb{B}$ and $\mathbb{N}$ as it contains the type parameter \emph{A}.
-The application of another type to the list datatype results in an own unique type, this concept is called type-level function.
+The application of another type to the list datatype results in an own unique type.
 
 \begin{codesnippet}[mathescape=true, caption={Definition of the list datatype in Agda}, label={codeSnippet:list_datatype}]
 data $\mathbb{L}$ {$\ell$} (A : Set $\ell$) : Set $\ell$ where
@@ -99,44 +101,44 @@ data $\mathbb{L}$ {$\ell$} (A : Set $\ell$) : Set $\ell$ where
   _::_ : (x : A) (xs: $\mathbb{L}$ A) $\rightarrow \mathbb{L}$ A
 \end{codesnippet}
 
-In this specific example, to construct a new list, the input is type \emph{A} of type level $\ell$  is required. The new type $\mathbb{L}$ \emph{A} will be at the same type level $\ell$.
-For example $\mathbb{L}$ $\mathbb{N}$ for the list of Peano numbers.
+In this specific example, to construct a new list, the input is type \emph{A} of type level $\ell$  is required. For example $\mathbb{L}$ $\mathbb{N}$ for the list of Peano numbers.
+The newly constructed type $\mathbb{L}$ \emph{A} will be at the same type level $\ell$.
 
-$\ell$ is just an additional argument but with the usage of curly braces around $\ell$, it is indicated that it is an implicit argument and should be inferred by Agda.
+$\ell$ is just an additional argument, but the curly braces around $\ell$ indicate, that it is an implicit argument and should be inferred by Agda.
 There is no guarantee that the type checker is able to infer implicit arguments and it fails otherwise.
-But it is always possible to specificy the implicit arguments in the call by enclosing the argument in curly braces\cite{norell:deptyped}.
+However, it is always possible to specify the implicit arguments in the call by enclosing the argument in curly braces\cite{norell:deptyped}.
 
-If $\ell$ would be omitted from the type definition, it would no longer be possible to construct a list type for higher universe types.
+If $\ell$ is omitted from the type definition of $\mathbb{L}$, it is no longer be possible to construct a list type for higher universe types.
 Suppose a list of types \emph{$\mathbb{B}$ :: []}. 
 The type of this expression is \emph{$\mathbb{L}$ Set} and therefore the type parameter \emph{A} is \emph{Set}. 
-Because \emph{Set} itself is of type $Set_1$ the definition without $\ell$ would not allow it.
+Because \emph{Set} itself is of type $Set_1$ the definition without $\ell$ would not allow this usage.
 
-When a parameter in a datatype definition is declared it can be used in the types of the constructors. 
-For example, the second constructor is defined as a function that takes an argument x of type A and a second argument xs of type $\mathbb{L}$ A and returns a new $\mathbb{L}$ A where A is exactly the type that was used to construct the type of the list.
+\todo{maybe note that the type parameter must be equal in the return type of all constructors}
+When a parameter in a datatype definition is declared it can be used in the types of the constructors.
+For example, the second constructor is defined as a function that takes an argument \emph{x} of type \emph{A} and a second argument \emph{xs} of type $\mathbb{L}$ \emph{A} and returns a new $\mathbb{L}$ \emph{A}, where \emph{A} is exactly the type that was used to construct the type of the list.
 
 With the help of the two constructors, it is possible to construct any possible list. 
-The next function to consider is $\_++\_$ which appends two lists of the same type show in code snippet \ref{codeSnippet:list_append}. 
-In combination with the examples in chapter \ref{section:dependent_types}, this will help to understand the difference between generic types and dependent types.
+The next function to consider is $\text{\_++\_}$, which appends two lists of the same type, shown in code snippet \ref{codeSnippet:list_append}. 
+In combination with the examples in chapter \ref{section:dependent_types}, this example will help to understand the difference between generic and dependent types.
 
 \begin{codesnippet}[mathescape=true, caption={Definition of the list append function in Agda}, label={codeSnippet:list_append}]
-_++_ : $\forall$ {$\ell$} {A : Set $\ell$} $\rightarrow \mathbb{L}$ A$\rightarrow \mathbb{L}$ A$\rightarrow \mathbb{L}$ A
+_++_ : $\forall$ {$\ell$} {A : Set $\ell$} $\rightarrow \mathbb{L}$ A $\rightarrow \mathbb{L}$ A $\rightarrow \mathbb{L}$ A
   []        ++ ys = ys
   (x :: xs) ++ ys = x :: (xs ++ ys)
 \end{codesnippet}
 
-To call this function two implicit and two explicit arguments are required. 
-Agda infers the correct type-level $\ell$ and the type A from the explicit arguments of type $\mathbb{L}$ A. 
-It is required that both lists are of the same type. 
-Because both input lists are of type $\mathbb{L}$ A it is possible to infer that the return value is also of type $\mathbb{L}$ A.
+To call this function, two implicit and two explicit arguments are required. 
+Agda infers the correct type-level $\ell$ and the type \emph{A} from the explicit arguments of type $\mathbb{L}$ \emph{A}. 
+It is required that both input arguments are of the same type $\mathbb{L}$ \emph{A}, and therefore it is possible to infer that the return value is also of type $\mathbb{L}$ \emph{A}.
 
-The second function for lists that is of interest is \emph{nth} which returns the nth element of an existing list.
-In particular the comparison with the same function for vectors, which is shown in chapter \ref{section_dependent_types_example}, can help to understand dependent types.
+The second function for lists, that is of interest, is \emph{nth} which returns the element at the specified position of a list.
+In particular, the comparison with the same function for vectors, which is shown in chapter \ref{section_dependent_types_example}, can help to understand dependent types.
 
-One fundamental problem that the access to the specific element at position n has, is that the list might not be long enough.
-In many common programming languages, this results in an exception. The concept of exceptions is, however, not included in Agda to maintain the properties of a total language.
+One fundamental problem of the access to a specific position has, is that the list might not be long enough.
+In many common programming languages, this results in an exception. However, the concept of exceptions is not included in Agda, to maintain the properties of a total language.
 A more detailed explanation can be found in section \ref{section:total_languages}.
 
-To overcome this issue, an additional datatype \emph{maybe} is introduced\footnote{In other languages such as Java the concept of the \emph{maybe} datatype is known as \emph{Optional}}.
+To overcome this issue, an additional datatype \emph{maybe} is introduced\footnote{In other languages, such as Java, the concept of the \emph{maybe} datatype is known as \emph{Optional}}.
 This datatype is either a wrapper around another element or indicates the absence of it.
 
 \begin{codesnippet}[mathescape=true, caption={Definition of the maybe datatype in Agda}, label={codeSnippet:maybe_datatype}]
@@ -145,7 +147,7 @@ data maybe {$\ell$} (A : Set $\ell$) : Set $\ell$ where
   nothing : maybe A
 \end{codesnippet}
 
-The function \emph{nth} as shown in code snippet \ref{codeSnippet:list_nth} takes two implicit arguments for the type level and the type A itself.
+The function \emph{nth} as shown in code snippet \ref{codeSnippet:list_nth} takes two implicit arguments for the type level and the type \emph{A} itself.
 
 \begin{codesnippet}[mathescape=true, caption={Definition of nth function in Agda}, label={codeSnippet:list_nth}]
 nth : $\forall$ {$\ell$} {A : Set $\ell$} $\rightarrow \mathbb{N}$ $\rightarrow \mathbb{L}$ A $\rightarrow$ maybe A
@@ -154,15 +156,16 @@ nth 0 (x :: xs) = just x
 nth (suc n) (x :: xs) = nth n xs
 \end{codesnippet}
 
-In addition to the implicit arguments, an element of type $\mathbb{N}$, the index of the desired element, as well as the list itself, have to be specified.
+In addition to the implicit arguments, the index of the desired element of type $\mathbb{N}$, as well as the list itself, have to be specified.
 
-The \emph{maybe} datatype solves the issue for the function \emph{nth} but wherever the nth function is used a case distinction is required to handle the nothing case.
+The \emph{maybe} datatype solves the discussed issue for the function \emph{nth}, but wherever the \emph{nth} function is used, a case distinction is required to handle the \emph{nothing} case.
 
 \subsection{Total languages}\label{section:total_languages}
 In comparison to other programming language, Agda is a so-called total programming language \cite{AgdaReadTheDocs}.
 This means that every valid Agda programs will always terminate with the correct type. There is no exception to this.
 
-In contrast to this, non-total languages often also terminate with the correct type, but they may also not terminate or raise an exception because something was not as expected and the behaviour for this special case was not defined.
+In contrast to this, non-total languages often terminate with the correct type. 
+But they may also raise an exception because something was not as expected and the behaviour for this special case was not defined, or not terminate at all.
 
 It is fundamental for Agda to be total because computations can be already required during type checking.
 If non-terminating computations were possible, type checking itself would be undecidable\cite{agda_wiki_totality}.
@@ -171,7 +174,7 @@ To ensure the totality of a program beside type checking, coverage checking as w
 Additionally \emph{strict positivity of constructors} as well as \emph{guardedness in coinductive programs} have to be checked, which are not discussed further in this publication.
 
 Coverage checking verifies that no partial function is defined. A partial function is a function with pattern matching that does not cover all cases.
-As oppossed to Haskell where partial functions are compiled successfully and only throw an exception when a not covered case is required at runtime, Agda does not compile partial functions.
+As opposed to Haskell, where partial functions are compiled successfully and only throw an exception when a not covered case is required at runtime, Agda does not compile partial functions.
 
 To be able to check a program for termination Agda accepts only two different recursive schemas which can be proven to terminate.
 
