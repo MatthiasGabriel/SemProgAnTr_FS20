@@ -27,9 +27,10 @@ It is required to specify the type of this new datatype because in Agda every ex
 
 But not every type is of type \emph{Set}. This would lead to non-terminating behaviour, as the type of \emph{Set} would also be \emph{Set}.
 
-Agda instead uses an infinite number of \emph{Set} types, \emph{Set 0}, \emph{Set 1}, \emph{Set 2}, ..., where elements of the next Set are potentially larger.
-The type \emph{Set n} is of type \emph{Set (n+1)} where \emph{Set n} is a \emph{universe} and n is called \emph{universe level} or \emph{type level} \cite{AgdaReadTheDocs, 10.1145/2841316}.
-\emph{Set} without any number as used in the definition of $\mathbb{N}$ is just an abbreviation for \emph{Set 0}.
+Agda instead uses an infinite number of $Set$ types, $Set_0$, $Set_1$, $Set_2$, ..., where elements of the next Set are potentially larger.
+The type $Set_n$ is of type $Set_(n+1)$ where $Set_n$ is a \emph{universe} and n is called \emph{universe level} or \emph{type level} \cite{AgdaReadTheDocs, 10.1145/2841316}.
+\emph{Set} without any number as used in the definition of $\mathbb{N}$ is just an abbreviation for $Set_0$. 
+Each set $Set_n$ can also be expressed as \emph{Set n} which is very common in definitions.
 
 After this basic definition two different constructors \emph{zero} and \emph{suc} are defined as shown in code snippet \ref{codeSnippet:natural_number}.
 There is little meaning in this short definition other than elements constructed with these operations are of type $\mathbb{N}$.
@@ -89,7 +90,7 @@ data $\mathbb{B}$ : Set where
 \end{codesnippet}
 
 \subsubsection{Type Parameters}
-The definition of the list datatype as seen in code snippet \ref{codeSnippet:list_datatype} is more complex than the previous datatype definitions of $\mathbb{B}$ and $\mathbb{N}$ as it contains a type parameter.
+The definition of the list datatype as seen in code snippet \ref{codeSnippet:list_datatype} is more complex than the previous datatype definitions of $\mathbb{B}$ and $\mathbb{N}$ as it contains the type parameter \emph{A}.
 The application of another type to the list datatype results in an own unique type, this concept is called type-level function.
 
 \begin{codesnippet}[mathescape=true, caption={Definition of the list datatype in Agda}, label={codeSnippet:list_datatype}]
@@ -98,13 +99,17 @@ data $\mathbb{L}$ {$\ell$} (A : Set $\ell$) : Set $\ell$ where
   _::_ : (x : A) (xs: $\mathbb{L}$ A) $\rightarrow \mathbb{L}$ A
 \end{codesnippet}
 
-\todo{Explain $\ell$}
-In this specific example, the function takes any type A at the type level $\ell$ and returns a new type, the concrete list type of A, at the same type level.\todo{research why this is required.}
+In this specific example, to construct a new list, the input is type \emph{A} of type level $\ell$  is required. The new type $\mathbb{L}$ \emph{A} will be at the same type level $\ell$.
 For example $\mathbb{L}$ $\mathbb{N}$ for the list of Peano numbers.
 
 $\ell$ is just an additional argument but with the usage of curly braces around $\ell$, it is indicated that it is an implicit argument and should be inferred by Agda.
 There is no guarantee that the type checker is able to infer implicit arguments and it fails otherwise.
 But it is always possible to specificy the implicit arguments in the call by enclosing the argument in curly braces\cite{norell:deptyped}.
+
+If $\ell$ would be omitted from the type definition, it would no longer be possible to construct a list type for higher universe types.
+Suppose a list of types \emph{$\mathbb{B}$ :: []}. 
+The type of this expression is \emph{$\mathbb{L}$ Set} and therefore the type parameter \emph{A} is \emph{Set}. 
+Because \emph{Set} itself is of type $Set_1$ the definition without $\ell$ would not allow it.
 
 When a parameter in a datatype definition is declared it can be used in the types of the constructors. 
 For example, the second constructor is defined as a function that takes an argument x of type A and a second argument xs of type $\mathbb{L}$ A and returns a new $\mathbb{L}$ A where A is exactly the type that was used to construct the type of the list.

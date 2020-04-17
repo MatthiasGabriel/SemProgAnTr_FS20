@@ -44,7 +44,6 @@ As the smallest possible natural number is 0, vectors of length 1 are the smalle
 This simplifies the implementation of \emph{head} and also each usage of \emph{head} as no exception handling for the empty data structure is necessary. 
 If the function can be called with a specific instance then it is guaranteed by the type system that an instance of data is returned.
 
-
 To be more clear what this means in practice lets consider a few examples in Agda.
 
 \subsection{$\Pi$-Types in Agda}\label{section_dependent_types_example}
@@ -235,8 +234,9 @@ $$where \, x \, does \, not \, appear \, free \, in \, B$$
 Another good description of the $\Sigma$-type is the following. 
 Elements of the type are pairs $(a, b)$ under the condition that $a \in A$ and $b \in B_a$.
 
-\todo{Extend this with relation to Curry-Howard Isomorphism/Correspondence as existential quantification}
 Dependent $\Sigma$-types are often used to express an element with a certain property and its corresponding proof.
+
+In contrast to $\Pi$-types which can be used to express universal quantification, $\Sigma$-types can be used to express existential quantification \cite{plfa2019}.
 
 As the implementation of $\Sigma$ in codesnippet \ref{codeSnippet:sigma} shows, it is possible to express $\Sigma$-types in terms of $\Pi$-types and no additional language feature is required.
 
@@ -255,7 +255,7 @@ The $\Sigma$ used in code snippet \ref{codeSnippet:nonzero_natural_number} from 
 
 The $\Sigma$ type constructor takes two explicit and two implicit arguments. 
 The first type argument is the type A of level $\ell$, the second type argument is a function of type B which takes an element of A and returns a new type of level $\ell '$.
-The type level of $\Sigma$ will be at $\ell$ $\sqcup$ $\ell '$. The operator $\sqcup$ is part of Agda's primitive level system and takes the maximum of the two input levels.
+The type level of $\Sigma$ will be at $\ell$ $\sqcup$ $\ell '$. The operator $\sqcup$ is part of Agda's primitive level system and takes the higher of the two input levels.
 
 The constructor for new elements of type $\Sigma$ is a single comma, which allows it to express $\Sigma$ elements as pairs.
 The  usage of the variable a of type A in the type definition of b shows the direct dependence of the second component to the value of the first component.
