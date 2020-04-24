@@ -47,8 +47,7 @@ If it is possible to call the function with a specific list, the type system gua
 To give additional insights about the usage of $\Pi$-types and its impact, the following section contains some simple examples in Agda.
 
 \subsection{$\Pi$-Types in Agda}\label{section_dependent_types_example}
-In this section, the vector datatype will be defined in Agda.
-
+In this section, the vector datatype will be defined in Agda. 
 It is essentially a list, but in contrast to the list datatype defined in section \ref{section:agda_introduction_example}, the type contains the size of the data structure.
 
 In addition to the implicit type-level and the type A, an additional parameter of type $\mathbb{N}$ is defined in the type definition as shown in code snippet \ref{codeSnippet:vector_datatype}.
@@ -273,6 +272,7 @@ The constructor for new elements of type $\Sigma$ is a single comma, which allow
 The usage of the variable \emph{a} of type \emph{A} in the type definition of \emph{b} shows the dependence of the second component to the value of the first component.
 
 Code snippet \ref{codeSnippet:nonzero_natural_number_suc} contains the successor function of $\mathbb{N}^+$ which returns the next nonzero Peano number.
+\linebreak
 \begin{codesnippet}[mathescape=true, caption={Successor function of $\mathbb{N}^+$}, label={codeSnippet:nonzero_natural_number_suc}]
 suc$^+$ : $\mathbb{N}^+$ $\rightarrow$ $\mathbb{N}^+$
 suc$^+$ (x, p) = (suc x, refl)
