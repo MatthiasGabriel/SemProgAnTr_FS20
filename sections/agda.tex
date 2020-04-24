@@ -24,7 +24,7 @@ To define a new datatype it is required to specify the name of the type after th
 Separated by a colon the type of the new datatype is defined - normally this is \emph{Set}.
 It is required to specify the type of this new datatype since  every expression in Agda has a type \cite{10.1145/2841316}.
 
-After this basic definition two different constructors \emph{zero} and \emph{suc} are defined as shown in code snippet \ref{codeSnippet:natural_number}.
+After this basic definition, two different constructors \emph{zero} and \emph{suc} are defined as shown in code snippet \ref{codeSnippet:natural_number}.
 There is little meaning in this short definition other than elements constructed with these operations are of type $\mathbb{N}$.
 The only additional information is that \emph{suc} requires another $\mathbb{N}$ to be constructed.
 
@@ -80,7 +80,7 @@ _<_ : $\mathbb{N} \rightarrow \mathbb{N} \rightarrow \mathbb{B}$
 (suc x) < 0 = false
 \end{codesnippet}
 
-The \_\textless\_ function follows the same structure as the \_+\_ function, but includes four different pattern matching cases. 
+The \_\textless\_ function follows the same structure as the \_+\_ function but includes four different pattern matching cases. 
 This might not be the smallest possible definition possible but it is very precise and comprehensible.
 
 The boolean datatype $\mathbb{B}$ consists of two constructors \emph{true} and \emph{false} and is shown in code snippet \ref{codeSnippet:boolean} for completeness.
@@ -162,7 +162,7 @@ In addition to the implicit arguments, the index of the desired element of type 
 The \emph{maybe} datatype solves the discussed issue for the function \emph{nth}, but wherever the \emph{nth} function is used, a case distinction is required to handle the \emph{nothing} case.
 
 \subsection{Total languages}\label{section:total_languages}
-In comparison to other programming language, Agda is a so-called total programming language \cite{AgdaReadTheDocs}.
+In comparison to other programming languages, Agda is a so-called total programming language \cite{AgdaReadTheDocs}.
 This means that every valid Agda programs will always terminate with the correct type. There is no exception to this.
 
 In contrast, non-total languages often terminate with the correct type. 
@@ -171,7 +171,7 @@ However, they may also raise an exception when something was not as expected and
 It is fundamental for Agda to be total since computations can already be required during type checking.
 If non-terminating computations were possible, type checking itself would be undecidable\cite{agda_wiki_totality}.
 
-To ensure the totality of a program besides type checking, coverage checking as well as termiantion checking are of great importance. 
+To ensure the totality of a program besides type checking, coverage checking as well as termination checking are of great importance. 
 Additionally, \emph{strict positivity of constructors}, as well as \emph{guardedness in coinductive programs}, have to be checked. However, they will not be discussed further in this publication.
 
 Coverage checking verifies that no partial function is defined. A partial function is a function with pattern matching that does not cover all cases.
@@ -179,11 +179,11 @@ As opposed to Haskell, where partial functions are compiled successfully and onl
 
 To be able to check a program for termination, Agda accepts only two different recursive schemas which can be proven to terminate.
 
-In the case of \emph{primitive recursion} the recursive call must be executed with an argument that is exactly one constructor smaller than in the original call.
+In the case of \emph{primitive recursion}, the recursive call must be executed with an argument that is exactly one constructor smaller than in the original call.
 
-For example in the addition of Peano numbers in code snippet \ref{codeSnippet:natural_number_addition} the arguments used in the recusive call have to be structurally smaller \cite{norell:deptyped}. 
+For example, in the addition of Peano numbers in code snippet \ref{codeSnippet:natural_number_addition}, the arguments used in the recursive call have to be structurally smaller \cite{norell:deptyped}. 
 This is the case as $m$ is structurally smaller than \emph{suc m} based on the definitions of the $\mathbb{N}$ datatype.
 
-Beside \emph{primitive recursion} Agda is able to determine termination on \emph{structural recursion}.
+Beside \emph{primitive recursion}, Agda is able to determine termination on \emph{structural recursion}.
 This requires the argument of the recursive call to be a subexpression of the original argument.
-As a contrast to \emph{primitive recursion} a recusive call with $m$ is also possible if the original argument was \emph{suc(suc m)}.
+As a contrast to \emph{primitive recursion}, a recursive call with $m$ is also possible if the original argument was \emph{suc(suc m)}.

@@ -13,7 +13,7 @@ Benjamin C. Pierce states in Types and Programming Languages\cite{10.5555/509043
 Mathematicians spend significant effort writing proof scripts and tactics to guide the tool in constructing and verifying a proof. [...], programmers should expect to expend similar amounts of effort [...] guiding the type checker. 
 \end{quote}
 
-Another obstacle is that some terminating functions, are not directly recognised as structurally terminating which increases the implementation effort enormously.
+Another obstacle is that some terminating functions are not directly recognised as structurally terminating which increases the implementation-effort enormously.
 The most common example is the division function of Peano numbers $\mathbb{N}$, which replicates the Haskell \emph{div} function from code snippet \ref{codeSnippet:division}.
 There are two problems when implementing such a function in Agda. Firstly, the proof that \emph{m} is not zero has to be included and secondly, that \emph{m - n} is not recognised as structurally smaller than \emph{m}. Both of these problems can be solved but the resulting function is complex.
 \begin{codesnippet}[mathescape=true, caption={Definition of div function in Haskell}, label={codeSnippet:division}]
@@ -21,10 +21,10 @@ div m n | m < n = 0
 div m n | m >= n = 1 + div (m - n) n
 \end{codesnippet}
 
-The division example and its solution is discuessed in separate chapters in different publications \cite{10.1145/2841316, Bove2009}, but will not be discussed further in this publication.
+The division example and its solution is discussed in separate chapters in different publications \cite{10.1145/2841316, Bove2009}, but will not be discussed further in this publication.
 
 \subsection{Who and where to use}
-This publication focusesses on Agda, but there are many other languages supporting dependent types and some of them are more common in the industry.
+This publication focusses on Agda, but many other languages are supporting dependent types and some of them are more common in the industry.
 Even though it is possible to compile Agda programs to Haskell or JavaScript, there are little references found, that use Agda to solve practical problems.
 It is often used as an introduction to programming language theory or the concept of dependent types.
 
