@@ -60,7 +60,7 @@ There are four different families of expressions in type theory, which are index
 The first is the family of \emph{terms indexed by terms}, also known as lambda expression, introduced in simply typed lambda-calculus. 
 The second is the family of \emph{terms indexed by types}, known als polymorphism. 
 The third is the family of \emph{types indexed by types}, known as type operators.
-The forth and last iis the family of \emph{types indexed by terms}, known as dependent types.
+The forth and last is the family of \emph{types indexed by terms}, known as dependent types.
 
 The lambda cube shown in figure \ref{fig:lambda_cube} was introduced by Barendregt \cite{lambda_cube}. It visualizes these abstractions and their use in different type systems. Each of the displayed systems uses the first abstraction. 
 The systems on the top include polymorphism, the systems in the back support type operators and the right side contains systems, which include dependent types.
@@ -77,11 +77,11 @@ It is not realistic that every software developer will use dependent types, howe
 
 As the concept of dependent types directly relates to an extended version of the lambda calculus, most of the currently known implementations are found in functional languages.
 In this publication, all code examples are based on Agda, because there are different beginner-friendly tutorials available as well as literature related to dependent types. 
-Amogst others this includes "Dependently Typed Programming in Agda" from Ulf Norell \cite{norell:deptyped}, "Programming Languages Foundations in Agda" from Phil Wadler \cite{plfa2019} as well as "Verified Functional Programming in Agda" from Aaron Stump \cite{10.1145/2841316} on which most of the examples are based\footnote{A comprehensive list can be found in the documentation of Agda \cite{AgdaReadTheDocs}.}.
+Amogst others this includes "Dependently Typed Programming in Agda" by Ulf Norell \cite{norell:deptyped}, "Programming Languages Foundations in Agda" by Phil Wadler \cite{plfa2019} as well as "Verified Functional Programming in Agda" by Aaron Stump \cite{10.1145/2841316} on which most of the examples are based\footnote{A comprehensive list can be found in the documentation of Agda \cite{AgdaReadTheDocs}.}.
 
 Section \ref{section:first_steps_in_agda} contains an introduction to Agda.
 It includes all concepts and definitions required to understand the examples in section \ref{section:dependent_types}.
 Section \ref{section:dependent_types} introduces the concept of \emph{Dependent Types}.
-Section \ref{section:limits} contains a short summary of limitations that dependent types have together with a few examples where dependent types are currently in use.
+Section \ref{section:limits} contains a summary concerning the limitations of dependent types together with a few examples where dependent types are currently in use.
 
 Basic knowledge of lambda calculus as well as any functional programming language, such as Haskell, is recommended to benefit the most from the following sections.

@@ -5,18 +5,17 @@ This section covers the basics of $\Pi$-types, which are also used in the first 
 These types are sometimes also called \emph{dependent function types} as in \cite{10.1145/2841316} or \emph{dependent product types} as in \cite{10.5555/1076265}. 
 Be aware that the name dependent product type can also be used for $\Sigma$-types as in \cite{10.1145/2841316}.
 
-In the introduction in section \ref{section:introduction} the concept of an enhanced list, where the length is a part of the type, was introduced.
-This data structure is in the literature often called vector \cite{10.1145/2841316} \cite{10.5555/1076265}.
+The introduction in section \ref{section:introduction} presented the concept of an enhanced list, where the length is a part of the type.
+Literature often calls this data structure vector \cite{10.1145/2841316} \cite{10.5555/1076265}.
 This new data structure is not a simple type but maps an input of type \emph{Nat} to a specific type. 
-To differentiate between such as structure and types the term \emph{type family} is used as suggested by Aspinall and Hofmann in \cite{10.5555/1076265}.
+To differentiate between such a structure and types the term \emph{type family} is used as suggested by Aspinall and Hofmann in \cite{10.5555/1076265}.
 
 $$Vector :: Nat \rightarrow *$$
 
 The type which contains vectors of length \emph{k} can be constructed by applying \emph{k} to \emph{Vector} or in another representation \emph{Vector k}.
 
 Two constructors are necessary to construct new vectors.
-One that constructs an empty vector and one that adds new elements to the vector. 
-This pattern should be familiar to anyone familiar with functional programming.
+One that constructs an empty vector and one that adds new elements to the vector.
 
 The second constructor \emph{cons} takes one element \emph{n} of type \emph{Nat}, an element of type \emph{data}, as well as a vector of length \emph{n} and returns a new vector of length \emph{n+1}. 
 The increased length of the returned vector accounts for the added element.
@@ -31,7 +30,7 @@ $$A \rightarrow B \, = \, \Pi \text{x:A. B}$$
 $$where \, x \, does \, not \, appear \, free \, in \, B$$
 
 An alternative description of the $\Pi$-type is the following: A function maps an element $a \in A$ to a new element $b \in B_a$. 
-This is also called type B is indexed by type A \cite{10.1145/2841316}.
+This is also called \emph{type B is indexed by type A} \cite{10.1145/2841316}.
 
 This additional type-information, can be exploited whenever such a type is used. 
 Consider a first example, where the function \emph{head} is defined, which returns the first element of a vector.
@@ -69,24 +68,24 @@ The first constructor, the empty vector, sets the length of the vector to the fi
 The second constructor is used to add new elements to an existing vector. It takes two arguments one of type \emph{A} and one of type \emph{$\mathbb{V}$ A n}, similar to the list, but additionally it determines the implicit argument \emph{n} of type $\mathbb{N}$ based on the input vector.
 This parameter is then used to define the return type. As exactly one new element is added to the existing list of type \emph{$\mathbb{V}$ A n} the new type has to be \emph{$\mathbb{V}$ A (suc n)}.
 
-Appending two vectors, as seen in code snippet \ref{codeSnippet:vector_append}, is a mix between appending two lists and the datatype definition of the vector and relatively straightforward.
+The concatenation of two vectors, as seen in code snippet \ref{codeSnippet:vector_append}, is a mix between concatenating two lists and the datatype definition of the vector and relatively straightforward.
 
-\begin{codesnippet}[mathescape=true, caption={Definition of the vector append function in Agda}, label={codeSnippet:vector_append}]
-_++$\mathbb{V}$_ : $\forall$ {$\ell$} {A : Set $\ell$}  {n m: $\mathbb{N}$ $\rightarrow$
+\begin{codesnippet}[mathescape=true, caption={Definition of the vector concatenation function in Agda}, label={codeSnippet:vector_append}]
+_++$\mathbb{V}$_ : $\forall$ {$\ell$} {A : Set $\ell$}  {n m: $\mathbb{N}$} $\rightarrow$
         $\mathbb{V}$ A n $\rightarrow \mathbb{V}$ A m $\rightarrow \mathbb{V}$ A (n + m)
   []        ++$\mathbb{V}$ ys = ys
   (x :: xs) ++$\mathbb{V}$ ys = x :: (xs ++$\mathbb{V}$ ys)
 \end{codesnippet}
+The unique name \_++$\mathbb{V}$\_ prevents a naming conflict between the concatenation operators of lists and vectors.
+It is not required by the language but simplifies the usage and improves the comprehensibility.
 
-To prevent a naming conflict between the append operators of lists and vectors the unique name \_++$\mathbb{V}$\_ was chosen.
+In contrast to the concatenation of list, the two explicit input arguments are not required to be objects of the same type.
+More specifically, the parameters \emph{n} and \emph{m} of type $\mathbb{N}$, which are also a part of the types, are allowed to be different. 
+Nevertheless, all elements contained in either of the vectors are still required to be of type \emph{A}.
 
-The types of these two vectors do not need to be equal. 
-More specifically, the parameters \emph{n} and \emph{m} of type $\mathbb{N}$, which are also a part of the types, can have different values. 
-Nevertheless it is still required that all elements contained in both vectors are of type \emph{A}.
+With this information, it is possible to deduce that the newly constructed vector is of type \emph{$\mathbb{V}$ A (n + m)}.
 
-With this information, it is possible to deduce that the newly constructed vector has the type \emph{$\mathbb{V}$ A (n + m)}.
-
-The next example will present the first benefit of including the length in the datatype.
+The next example presents the first benefit of including the length in the datatype.
 In case of the list datatype $\mathbb{L}$, it is required to define the additional helper datatype \emph{maybe} as described in section \ref{section:agda_introduction_example} when implementing the \emph{nth} function.
 Additionally, whenever a programmer uses the function, he has to think of the different cases \emph{nothing} or \emph{just} and adjust the functionality, usually by introducing additional pattern matching. 
 
@@ -99,17 +98,17 @@ head$\mathbb{V}$ : $\forall$ {$\ell$} {A : Set $\ell$} {n : $\mathbb{N}$} $\righ
 head$\mathbb{V}$ (x :: _) = x
 \end{codesnippet}
 
-This is possible by using the additional information of the implicit parameter \emph{n} of type $\mathbb{N}$, respectivelly by restricting the input vector to the type \emph{$\mathbb{V}$ A suc(n)}.
-Elements of this type have a least one entry, in the case that the implicit parameter \emph{n} is zero.
+This is possible by using the additional information of the implicit parameter \emph{n} of type $\mathbb{N}$, respectively by restricting the input vector to type \emph{$\mathbb{V}$ A suc(n)}.
+Elements of this type have at least one entry, in case that the implicit parameter \emph{n} is zero.
 
 It is possible to define the \emph{head} without specificing a pattern for the empty vector [], as the type checker can infer that this case is not possible.
 Whenever a particular case is type correct it is necessary to include it, otherwise it needs to be omitted \cite{norell:deptyped}.
 
 \subsection{Proofs as programs}\label{section:agda_proofs}
-In this section a small introduction to \emph{Propositions as Types}\cite{10.1145/2699407} will be given, together with a few examples in Agda. 
+This section contains a short introduction to \emph{Propositions as Types}\cite{10.1145/2699407}, together with a few examples in Agda. 
 \emph{Proposition as Types} is also known under the names \emph{Curry-Howard Correspondence}\cite{10.5555/1076265} and \emph{Curry-Howard Isomorphism}\cite{10.1145/2841316} and many more.
 
-All this different name describe the interlinking between logic and programming.
+All this different names describe the interlinking between logic and programming.
 There are three main statements of interest, pointed out by Wadler in \cite{10.1145/2699407}.
 
 \emph{Propositions as types} states that each proposition in a logic has a corresponding type in the programming world and the other way around. 
@@ -122,8 +121,8 @@ This enables the representation of propositions and corresponding proofs directl
 
 \subsubsection{Proofs as programs in Agda}
 In Agda it is possbile to define propositional equalities such as $zero + suc(zero) \equiv suc(zero)$. The type of this expression is \emph{Set}, which is the type of types.
-This was the first application of propositions as types.
-However this proposition is not proved yet.
+This is already an application of propositions as types.
+However this proposition is not proven yet.
 It is also possible to state wrong propositions such as $zero + suc(zero) \equiv zero$ without any compiler errors.
 
 To prove this proposition a program of the type $zero + suc(zero) \equiv suc(zero)$ has to be implemented.
@@ -143,7 +142,7 @@ If the program gets typechecked successfully, the proof is completed.
 
 This proof is specific to the values \emph{zero} and \emph{suc(zero)}, similiar to a single test case.
 But in combination with a dependent function type it is possible to extend this proof to any Peano number $\mathbb{N}$. 
-To do this the universal quantifier $\forall$, which is also common in mathematics, is used\footnote{The $\forall$ symbol is one of the few reserved keywords in Agda.}.
+To do this, the universal quantifier $\forall$, which is also common in mathematics, is used\footnote{The $\forall$ symbol is one of the few reserved keywords in Agda.}.
 It allows to state that the specified property should hold for every possible assignment\cite{plfa2019}.
 
 The new proposition in code snippet \ref{codeSnippet:zero_plus_x_agda} is a little more complex but still comprehensible. 
@@ -197,7 +196,7 @@ nth$\mathbb{V}$ zero () []
 \end{codesnippet}
 
 The base case of the \emph{nth$\mathbb{V}$} recursive function is at line three. It states that if the element at index zero is wanted, the first element of the list is returned.
-To indicate that the proof, that zero is smaller than length of the vector, as well as the tail of the vector are not used in the definition of the function they are replaced by an \_.
+To indicate that the proof, that zero is smaller than the length of the vector, as well as the tail of the vector are not used in the definition of the function they are replaced by an \_.
 
 At line four the recursive case is defined which calls \emph{nth$\mathbb{V}$}, but with the predecessor of \emph{n} and the tail of the current vector.
 The second argument \emph{p}, which contains the proof that \emph{suc(n)} is smaller than the length of the vector, is directly passed into the new function call. 
@@ -205,8 +204,8 @@ At first glance, the reuse of the proof \emph{p} might look unusual.
 This is possible because the index as well as the length of the new vector \emph{xs} are decreased by exactly one.
 The proof \emph{p} is still valid as \emph{suc n $<$ suc m $\equiv$ true} and \emph{n $<$ m $\equiv$ true} are definitionally equal.
 
-The last two lines look quite different than any of the definitions before.
-Because it is not possible to prove that \emph{suc n $<$ m $\equiv$ true} where \emph{m} is the length of the empty list, or more concretely zero, the so-called absurd pattern can be used. 
+The last two lines look quite different than any of the previous definitions.
+Because it is not possible to prove that \emph{suc n $<$ m $\equiv$ true}, where \emph{m} is the length of the empty list, or more concretely zero, the so-called absurd pattern can be used. 
 This tells Agda that this case can never be reached and therefore no definition for this case has to be implemented.
 The reason why the last line is required, lies in the definition of \_$<$\_ of $\mathbb{N}$ shown in code snippet \ref{codeSnippet:natural_number_less_than}.
 Because in that definition a case distinction between $0 < 0$ and $\text{(suc x)} < 0$ was made, the last line, which proves that \emph{zero $<$ zero $\equiv$ true} is \emph{false}, is required as well.
@@ -241,7 +240,7 @@ Another good description of the $\Sigma$-type is the following.
 Elements of the type are pairs $(a, b)$ under the condition that $a \in A$ and $b \in B_a$.
 
 Dependent $\Sigma$-types are often used to express an element with a certain property and the corresponding proof.
-This is due to the fact that propositions, which are the type of the proofs, often requires the element.
+This is due to the fact that propositions, which are the type of the proofs, often require the element.
 
 In contrast to $\Pi$-types which can be used to express universal quantification, $\Sigma$-types can be used to express existential quantification \cite{plfa2019}.
 

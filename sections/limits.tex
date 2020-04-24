@@ -10,21 +10,21 @@ In addition to the theoretical limits of dependently typed languages, additional
 The most important limitation is that writing proofs, one of the main features that dependent types enable, can be extremely difficult and time-consuming.
 Benjamin C. Pierce states in Types and Programming Languages\cite{10.5555/509043}:
 \begin{quote}
-Mathematicians spend significant effort writing proof scripts and tactics to guide the tool in constructing and verifiyng a proof. [...], programmers should expect to expend similar amounts of effort [...] guiding the type checker. 
+Mathematicians spend significant effort writing proof scripts and tactics to guide the tool in constructing and verifying a proof. [...], programmers should expect to expend similar amounts of effort [...] guiding the type checker. 
 \end{quote}
 
 Another obstacle is that some terminating functions, are not directly recognised as structurally terminating which increases the implementation effort enormously.
 The most common example is the division function of Peano numbers $\mathbb{N}$, which replicates the Haskell \emph{div} function from code snippet \ref{codeSnippet:division}.
-There are two problems when implementing such a function in Agda. The minor is, that the proof that \emph{m} is not zero has to be included, the second is that \emph{m - n} is not recognised as structurally smaller than \emph{m}. Both of these problems can be solved but the resulting function is complex.
+There are two problems when implementing such a function in Agda. Firstly, the proof that \emph{m} is not zero has to be included and secondly, that \emph{m - n} is not recognised as structurally smaller than \emph{m}. Both of these problems can be solved but the resulting function is complex.
 \begin{codesnippet}[mathescape=true, caption={Definition of div function in Haskell}, label={codeSnippet:division}]
 div m n | m < n = 0
 div m n | m >= n = 1 + div (m - n) n
 \end{codesnippet}
 
-The division example and its solution is contained in an own chapter in different publications \cite{10.1145/2841316, Bove2009}, but will not be discussed further in this publication.
+The division example and its solution is discuessed in separate chapters in different publications \cite{10.1145/2841316, Bove2009}, but will not be discussed further in this publication.
 
 \subsection{Who and where to use}
-This publication is focused on Agda, but there are many other languages supporting dependent types and some of them are more common in the industry.
+This publication focusesses on Agda, but there are many other languages supporting dependent types and some of them are more common in the industry.
 Even though it is possible to compile Agda programs to Haskell or JavaScript, there are little references found, that use Agda to solve practical problems.
 It is often used as an introduction to programming language theory or the concept of dependent types.
 
@@ -37,12 +37,12 @@ In the same publication, he introduced additional support for dependent types di
 
 Even though there are efforts to improve the situation for Haskell, and with it introduce dependent types to a much bigger community, it seems that it has not improved very much in the last years.
 
-A case analysis from Christiansen et al \cite{10.1145/3341704} on the construction of a Haskell library for symbolic execution, shows that the dependent type features allowed to improve the code correctness. 
+A case-analysis by Christiansen et al \cite{10.1145/3341704} on the construction of a Haskell library for symbolic execution shows that the dependent type features allowed them to improve the code correctness. 
 The introduced static well-formedness checks helped during refactorings as well. 
 However, they noticed different difficulties, including tooling support, type system limitations, as well as the massive need for manual proofs. 
 Additionally, they state that it is hard to find developers who are skilled enough in Haskell and dependently typed programming and that the entry into this combination is extremely laborious.
 
-Another dependently typed programming language that is used in an industry near projects is F*. 
+Another dependently typed programming language that is used in industry-related projects is F*. 
 Its most notable usage is in the Project Everest \cite{project_everest_github_io}. The primary aim of Project Everest is to build a fully verified HTTPS stack.
 It is mainly driven by Microsoft Researchers in collaboration with different universities and uses F* for many different parts.
-Project Everest started in 2016 and is still work in progress, but some parts of it such as verified cryptographic functions are used in productive applications such as the Mozilla Network Security Services\cite{project_everest_slides}, the WireGuard VPN and others.
+Project Everest started in 2016 and is still a work in progress, but some parts of it such as verified cryptographic functions are used in productive applications such as the Mozilla Network Security Services\cite{project_everest_slides}, the WireGuard VPN and others.
