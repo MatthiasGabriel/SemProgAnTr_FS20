@@ -1,7 +1,7 @@
 \section{Introduction}\label{section:introduction}
-Statically typed programming languages are very popular as they can detect various programming errors at compile time.
-The concept of parametric polymorphism is very heavily used in functional languages such as Haskell. With the introduction of type parameters to many different popular programming languages such as Java\footnote{Under the name of Generics in JDK 5 in 2004\cite{JDK5}},
- C\#\footnote{Under the name of Generics in .NET Framework 2.0 in 2005\cite{dotnet20}} or C++\footnote{Under the name of templates} a big improvement of type safety was brought to the mainstream programming languages and has become indispensable.
+Statically typed programming languages are very popular as they can detect various programming errors already at compile time.
+The concept of parametric polymorphism is very heavily used in functional languages such as Haskell. With the introduction of type parameters to many different popular programming languages such as Java\footnote{As Generics in JDK 5 in 2004\cite{JDK5}},
+ C\#\footnote{As Generics in .NET Framework 2.0 in 2005\cite{dotnet20}} or C++\footnote{As templates} a big improvement of type safety was brought to the mainstream programming languages and has become indispensable.
 
 With the help of this language feature, common type errors can now be detected at compile time instead of runtime as shown in the following code snippets \ref{codeSnippet:list_without_generic} and \ref{codeSnippet:list_with_generic} without the need to implement multiple \emph{ArrayList} classes.
 
@@ -44,7 +44,7 @@ Even though the developer knows how many elements this list contains, this infor
 However, it would be useful if this kind of error could be detected by the compiler.
 
 Imagine it is possible to supply an additional parameter to the type which specifies the length of the list as shown in code snippet \ref{codeSnippet:hypothetical_dependet_types}. 
-The compiler is now able to detect the access to the wrong index and stop the compilation with an appropriate error\footnote{The example in code snippet \ref{codeSnippet:hypothetical_dependet_types} is purely fictional and beside the missing language feature other issues such as the mutability of ArrayLists exist.}.
+The compiler is now able to detect the access to the wrong index and stop the compilation with an appropriate error\footnote{The example in code snippet \ref{codeSnippet:hypothetical_dependet_types} is purely fictional. Besides the missing language feature there exist other issues such as the mutability of ArrayLists.}.
 \begin{adjustbox}{width=\columnwidth}
 \begin{codesnippet}[escapeinside={(*}{*)}, caption={ArrayList with size parameter}, label={codeSnippet:hypothetical_dependet_types}]
 List<Integer, 0> v = new ArrayList<Integer, 0)>();
@@ -54,8 +54,7 @@ Integer i = v.get(1); // compile time error
 \end{adjustbox}
 \linebreak
 
-\todo{rephrase}
-There are four different families of expressions in type theory, which are indexed by other expressions, as pointed out by Pierce in \cite{10.5555/1076265}. 
+There are four different families of expressions in type theory, which are indexed by other expressions, as pointed out by Pierce in "Types and Programming Languages"\cite{10.5555/1076265}. 
 
 The first is the family of \emph{terms indexed by terms}, also known as lambda expression, introduced in simply typed lambda-calculus. 
 The second is the family of \emph{terms indexed by types}, known as polymorphism. 
@@ -73,10 +72,10 @@ The systems on the top include polymorphism, the systems in the back support typ
 
 The biggest benefit of dependent types is the possibility to formulate constructive proofs about the desired properties of the program directly in the program itself.
 If the need for safe and secure software continues to increase as it did in the past, the need for dependent types will likely increase as well.
-It is not realistic that every software developer will use dependent types, however, it can be of great advantage to know dependent types exists as well as the basics of the concept.
+It is not realistic that every software developer will use dependent types, however, it can be of great advantage to know dependent types exists as well as conceptional basics.
 
 As the concept of dependent types directly relates to an extended version of the lambda calculus, most of the currently known implementations are found in functional languages.
-In this publication, all code examples are based on Agda, because there are different beginner-friendly tutorials available as well as literature related to dependent types. 
+In this publication, all code examples are based on Agda, because there are different beginner-friendly tutorials as well as literature related to dependent types available. 
 Amongst others, this includes "Dependently Typed Programming in Agda" by Ulf Norell \cite{norell:deptyped}, "Programming Languages Foundations in Agda" by Phil Wadler \cite{plfa2019} as well as "Verified Functional Programming in Agda" by Aaron Stump \cite{10.1145/2841316} on which most of the examples are based\footnote{A comprehensive list can be found in the documentation of Agda \cite{AgdaReadTheDocs}.}.
 
 Section \ref{section:first_steps_in_agda} contains an introduction to Agda.

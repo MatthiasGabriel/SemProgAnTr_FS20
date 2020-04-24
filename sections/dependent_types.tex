@@ -161,7 +161,7 @@ If the addition happens in a different order and \emph{zero} gets added to \emph
 The reason for this lies in the definition of addition.
 Because the recursion happens on the second argument it is no longer possible for Agda to determine that these terms are definitionally equal and requires the programmer to add additional hints to be able to prove the equality.
 
-\begin{codesnippet}[mathescape=true, caption={Proof of addition of zero in Agda}, label={codeSnippet:x_plus_zero_agda}]
+\begin{codesnippet}[mathescape=true, caption={Proof of addition of zero}, label={codeSnippet:x_plus_zero_agda}]
 x+0 : $\forall$ (x : $\mathbb{N}$) $\rightarrow$ x + zero $\equiv$ x
 x+0 zero = refl
 x+0 (suc a) rewrite x+0 a = refl
