@@ -14,7 +14,7 @@ Another important thing to mention is the integration into emacs, which works as
 \subsubsection{Datatype Definitions}
 The first example contains the datatype definition for Peano natural numbers $\mathbb{N}$ shown in code snippet \ref{codeSnippet:natural_number}.
 
-\begin{codesnippet}[mathescape=true, caption={Definition of the peano natural numbers datatype in Agda}, label={codeSnippet:natural_number}]
+\begin{codesnippet}[mathescape=true, caption={Peano numbers datatype}, label={codeSnippet:natural_number}]
 data $\mathbb{N}$: Set where
   zero : $\mathbb{N}$
   suc  : $\mathbb{N} \rightarrow \mathbb{N}$
@@ -31,7 +31,7 @@ The only additional information is that \emph{suc} requires another $\mathbb{N}$
 Elements of $\mathbb{N}$ can now be constructed by calling the constructors and used in functions with pattern matching. 
 Code snippet \ref{codeSnippet:natural_number_constructor} shows the basic usage of the two different constructors.
 
-\begin{codesnippet}[mathescape=true, caption={Some peano numbers}, label={codeSnippet:natural_number_constructor}]
+\begin{codesnippet}[mathescape=true, caption={Creating Peano numbers}, label={codeSnippet:natural_number_constructor}]
 x = zero
 y = suc zero
 z = suc (suc (suc zero))
@@ -50,7 +50,7 @@ Each set $Set_n$ can also be expressed as \emph{Set n}, which is very common in 
 \subsubsection{Mixfix Operators}
 Addition of Peano numbers can be defined in a very elegant way as an infix operator as shown in code snippet \ref{codeSnippet:natural_number_addition}.
 
-\begin{codesnippet}[mathescape=true, caption={Peano numbers addition}, label={codeSnippet:natural_number_addition}]
+\begin{codesnippet}[mathescape=true, caption={Addition function for Peano numbers}, label={codeSnippet:natural_number_addition}]
 _+_ : $\mathbb{N} \rightarrow \mathbb{N} \rightarrow \mathbb{N}$
 zero  + n = n
 suc m + n = suc (m + n)
@@ -65,14 +65,14 @@ However, mixfix operators are not restricted to two arguments, but allow more co
 To be able to use multiple infix operators in the same expression it is necessary to specify different precedences.
 With the three different keywords \emph{infix}, \emph{infixr} and \emph{infixl} the precedence as well as the associativity of the operator can be defined\footnote{The precendence factor defaults to 20 and can also be negative.}.
 
-\begin{codesnippet}[mathescape=true, caption={Precedence and associativity of some Peano number operators}, label={codeSnippet:natural_number_precedence}]
+\begin{codesnippet}[mathescape=true, caption={Precedence and associativity of Peano number operators}, label={codeSnippet:natural_number_precedence}]
 infixl 40 _+_
 infixl 20 _<_
 \end{codesnippet}
 
 An additional function for Peano numbers which is used in this publication is the comparison function shown in code snippet \ref{codeSnippet:natural_number_less_than}.
 
-\begin{codesnippet}[mathescape=true, caption={Peano numbers less-than}, label={codeSnippet:natural_number_less_than}]
+\begin{codesnippet}[mathescape=true, caption={Less-than function for Peano numbers}, label={codeSnippet:natural_number_less_than}]
 _<_ : $\mathbb{N} \rightarrow \mathbb{N} \rightarrow \mathbb{B}$
 0 < 0 = false
 0 < (suc y) = true
@@ -85,7 +85,7 @@ This might not be the smallest possible definition possible but it is very preci
 
 The boolean datatype $\mathbb{B}$ consists of two constructors \emph{true} and \emph{false} and is shown in code snippet \ref{codeSnippet:boolean} for completeness.
 
-\begin{codesnippet}[mathescape=true, caption={Definition of the boolean datatype in Agda}, label={codeSnippet:boolean}]
+\begin{codesnippet}[mathescape=true, caption={Boolean datatype}, label={codeSnippet:boolean}]
 data $\mathbb{B}$ : Set where
   true : $\mathbb{B}$
   false  : $\mathbb{B}$
@@ -95,7 +95,7 @@ data $\mathbb{B}$ : Set where
 The definition of the list datatype as seen in code snippet \ref{codeSnippet:list_datatype} is more complex than the previous datatype definitions of $\mathbb{B}$ and $\mathbb{N}$ as it contains the type parameter \emph{A}.
 The application of another type to the list datatype results in an own unique type.
 
-\begin{codesnippet}[mathescape=true, caption={Definition of the list datatype in Agda}, label={codeSnippet:list_datatype}]
+\begin{codesnippet}[mathescape=true, caption={List datatype}, label={codeSnippet:list_datatype}]
 data $\mathbb{L}$ {$\ell$} (A : Set $\ell$) : Set $\ell$ where
   [] : $\mathbb{L}$ A
   _::_ : (x : A) (xs: $\mathbb{L}$ A) $\rightarrow \mathbb{L}$ A
@@ -114,7 +114,6 @@ Suppose a list of types \emph{$\mathbb{B}$ :: []}.
 The type of this expression is \emph{$\mathbb{L}$ Set} and therefore the type parameter \emph{A} is \emph{Set}. 
 Because \emph{Set} itself is of type $Set_1$ a similar definition without $\ell$ would not allow this usage.
 
-\todo{maybe note that the type parameter must be equal in the return type of all constructors}
 Parameters declared in a datatype definition can be used in the constructors.
 For example, the second constructor is defined as a function with an input argument \emph{x} of type \emph{A}, a second input argument \emph{xs} of type $\mathbb{L}$ \emph{A} and a return value of $\mathbb{L}$ \emph{A}, where \emph{A} is exactly the type used to construct the type of the list.
 
@@ -122,7 +121,7 @@ With the help of the two constructors, it is possible to construct any possible 
 The next function to consider is $\text{\_++\_}$, which concatenates two lists of the same type, shown in code snippet \ref{codeSnippet:list_append}. 
 In combination with the examples in chapter \ref{section:dependent_types}, this example will help to understand the difference between generic and dependent types.
 
-\begin{codesnippet}[mathescape=true, caption={Definition of the list concatenation function in Agda}, label={codeSnippet:list_append}]
+\begin{codesnippet}[mathescape=true, caption={List concatenation function}, label={codeSnippet:list_append}]
 _++_ : $\forall$ {$\ell$} {A : Set $\ell$} $\rightarrow \mathbb{L}$ A $\rightarrow \mathbb{L}$ A $\rightarrow \mathbb{L}$ A
   []        ++ ys = ys
   (x :: xs) ++ ys = x :: (xs ++ ys)
@@ -142,7 +141,7 @@ A more detailed explanation can be found in section \ref{section:total_languages
 To overcome this issue, an additional datatype \emph{maybe} is introduced\footnote{In other languages, such as Java, the concept of the \emph{maybe} datatype is known as \emph{Optional}}.
 This datatype is either a wrapper around another element or indicates the absence of it.
 
-\begin{codesnippet}[mathescape=true, caption={Definition of the maybe datatype in Agda}, label={codeSnippet:maybe_datatype}]
+\begin{codesnippet}[mathescape=true, caption={Maybe datatype}, label={codeSnippet:maybe_datatype}]
 data maybe {$\ell$} (A : Set $\ell$) : Set $\ell$ where
   just : A $\rightarrow$ maybe A
   nothing : maybe A
@@ -150,7 +149,7 @@ data maybe {$\ell$} (A : Set $\ell$) : Set $\ell$ where
 
 The function \emph{nth} as shown in code snippet \ref{codeSnippet:list_nth} takes two implicit arguments for the type level and the type \emph{A} itself.
 
-\begin{codesnippet}[mathescape=true, caption={Definition of nth function in Agda}, label={codeSnippet:list_nth}]
+\begin{codesnippet}[mathescape=true, caption={\emph{Nth} function for lists}, label={codeSnippet:list_nth}]
 nth : $\forall$ {$\ell$} {A : Set $\ell$} $\rightarrow \mathbb{N}$ $\rightarrow \mathbb{L}$ A $\rightarrow$ maybe A
 nth _ [] = nothing
 nth 0 (x :: xs) = just x

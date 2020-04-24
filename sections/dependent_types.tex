@@ -53,7 +53,7 @@ It is essentially a list, but in contrast to the list datatype defined in sectio
 
 In addition to the implicit type-level and the type A, an additional parameter of type $\mathbb{N}$ is defined in the type definition as shown in code snippet \ref{codeSnippet:vector_datatype}.
 
-\begin{codesnippet}[mathescape=true, caption={Definition of the vector datatype in Agda}, label={codeSnippet:vector_datatype}]
+\begin{codesnippet}[mathescape=true, caption={Vector datatype}, label={codeSnippet:vector_datatype}]
 data $\mathbb{V}$ {$\ell$} (A : Set $\ell$) : $\mathbb{N}$ $\rightarrow$ Set $\ell$ where
   [] : $\mathbb{V}$ A zero
   _::_ : {n : $\mathbb{N}$} (x : A) (xs: $\mathbb{V}$ A n) $\rightarrow$
@@ -70,7 +70,7 @@ This parameter is then used to define the return type. As exactly one new elemen
 
 The concatenation of two vectors, as seen in code snippet \ref{codeSnippet:vector_append}, is a mix between concatenating two lists and the datatype definition of the vector and relatively straightforward.
 
-\begin{codesnippet}[mathescape=true, caption={Definition of the vector concatenation function in Agda}, label={codeSnippet:vector_append}]
+\begin{codesnippet}[mathescape=true, caption={Vector concatenation function}, label={codeSnippet:vector_append}]
 _++$\mathbb{V}$_ : $\forall$ {$\ell$} {A : Set $\ell$}  {n m: $\mathbb{N}$} $\rightarrow$
         $\mathbb{V}$ A n $\rightarrow \mathbb{V}$ A m $\rightarrow \mathbb{V}$ A (n + m)
   []        ++$\mathbb{V}$ ys = ys
@@ -92,7 +92,7 @@ Additionally, whenever a programmer uses the function, he has to think of the di
 The same restrictions are met by the \emph{head} function of a $\mathbb{L}$. 
 However, the \emph{head} function of $\mathbb{V}$ shown in code snippet \ref{codeSnippet:vector_head} is guaranteed to return a single object of type \emph{A}.
 
-\begin{codesnippet}[mathescape=true, caption={Definition of $head\mathbb{V}$ function in Agda}, label={codeSnippet:vector_head}]
+\begin{codesnippet}[mathescape=true, caption={$head\mathbb{V}$ function for vectors}, label={codeSnippet:vector_head}]
 head$\mathbb{V}$ : $\forall$ {$\ell$} {A : Set $\ell$} {n : $\mathbb{N}$} $\rightarrow$ 
         $\mathbb{V}$ A suc(n) $\rightarrow$ A
 head$\mathbb{V}$ (x :: _) = x
@@ -150,7 +150,7 @@ It states that for every \emph{x} of type $\mathbb{N}$ the specified equivalence
 Because a variable \emph{x} is defined in the type, the program requires an input argument.
 In this code snippet, this argument gets assigned to the variable \emph{a}.
 
-\begin{codesnippet}[mathescape=true, caption={Proof of addition to zero in Agda}, label={codeSnippet:zero_plus_x_agda}]
+\begin{codesnippet}[mathescape=true, caption={Proof of addition to zero}, label={codeSnippet:zero_plus_x_agda}]
 0+x : $\forall$ (x : $\mathbb{N}$) $\rightarrow$ zero + x $\equiv$ x
 0+x a = refl
 \end{codesnippet}
@@ -186,7 +186,7 @@ The important thing to remember is that both a base case, as well as partial sol
 Similar to \emph{head$\mathbb{V}$} the function \emph{nth$\mathbb{V}$} in code snippet \ref{codeSnippet:vector_nth} has an implicit parameter \emph{m} of type $\mathbb{N}$ which represents the length of the input vector. 
 However, it contains an additional explicit parameter, which is a proof that \emph{n} is less than \emph{m}.
 
-\begin{codesnippet}[mathescape=true, caption={Definition of \emph{nth} function in Agda}, label={codeSnippet:vector_nth}]
+\begin{codesnippet}[mathescape=true, caption={\emph{Nth} function for vectors}, label={codeSnippet:vector_nth}]
 nth$\mathbb{V}$ : $\forall$ {$\ell$} {A : Set $\ell$} {m : $\mathbb{N}$} $\rightarrow$
        (n : $\mathbb{N}$) $\rightarrow$ n < m $\equiv$ true $\rightarrow \mathbb{V}$ A m $\rightarrow$ A
 nth$\mathbb{V}$ zero _ (x :: _) = x
@@ -212,7 +212,7 @@ Because in that definition a case distinction between $0 < 0$ and $\text{(suc x)
 
 Whenever the function \emph{nth$\mathbb{V}$} is called, a proof that \emph{m $<$ n} is equivalent to \emph{true} is required as shown in code snippet \ref{codeSnippet:vector_nth_usage}. This can easily be done by using refl.
 
-\begin{codesnippet}[mathescape=true, caption={Usage of \emph{nth} function in Agda}, label={codeSnippet:vector_nth_usage}]
+\begin{codesnippet}[mathescape=true, caption={Usage of \emph{nth} function}, label={codeSnippet:vector_nth_usage}]
 testVector = false :: false :: []
 element = nth$\mathbb{V}$ (suc zero) refl testVector
 
@@ -252,14 +252,14 @@ It is directly based on the Peano numbers $\mathbb{N}$ defined in section \ref{s
 
 The definition of $\mathbb{N}^+$ in code snippet \ref{codeSnippet:nonzero_natural_number} states that each element is a pair of a Peano number combined with the proof that this specific number applied to the \emph{iszero} function returns \emph{false}.
 
-\begin{codesnippet}[mathescape=true, caption={Definition of nonzero Peano numbers in Agda}, label={codeSnippet:nonzero_natural_number}]
+\begin{codesnippet}[mathescape=true, caption={Definition of nonzero Peano numbers}, label={codeSnippet:nonzero_natural_number}]
 $\mathbb{N}^+$ : Set
 $\mathbb{N}^+$ = $\Sigma$ $\mathbb{N}$ ($\lambda$ n $\rightarrow$ iszero n $\equiv$ false)
 \end{codesnippet}
 
 The $\Sigma$ used in code snippet \ref{codeSnippet:nonzero_natural_number} from IAL is a simplification of the one defined in the standard library of Agda and only consists of three lines and is shown in code snippet \ref{codeSnippet:sigma}.
 
-\begin{codesnippet}[mathescape=true, caption={Definition of $\Sigma$ in Agda}, label={codeSnippet:sigma}]
+\begin{codesnippet}[mathescape=true, caption={Definition of $\Sigma$ datatype}, label={codeSnippet:sigma}]
 data $\Sigma$ {$\ell$ $\ell '$} (A : Set $\ell$) (B : A $\rightarrow$ Set $\ell '$)
  : Set ($\ell$ $\sqcup$ $\ell '$) where
 _,_ : (a : A) $\rightarrow$ (b : B a) $\rightarrow$ $\Sigma$ A B
@@ -273,7 +273,7 @@ The constructor for new elements of type $\Sigma$ is a single comma, which allow
 The usage of the variable \emph{a} of type \emph{A} in the type definition of \emph{b} shows the dependence of the second component to the value of the first component.
 
 Code snippet \ref{codeSnippet:nonzero_natural_number_suc} contains the successor function of $\mathbb{N}^+$ which returns the next nonzero Peano number.
-\begin{codesnippet}[mathescape=true, caption={Successor of $\mathbb{N}^+$}, label={codeSnippet:nonzero_natural_number_suc}]
+\begin{codesnippet}[mathescape=true, caption={Successor function of $\mathbb{N}^+$}, label={codeSnippet:nonzero_natural_number_suc}]
 suc$^+$ : $\mathbb{N}^+$ $\rightarrow$ $\mathbb{N}^+$
 suc$^+$ (x, p) = (suc x, refl)
 \end{codesnippet}
